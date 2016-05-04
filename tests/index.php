@@ -4,14 +4,14 @@
 require_once '../../../autoload.php';
 require_once 'config.php';
 
+use \TijsVerkoyen\Bpost\Bpack247;
 use \TijsVerkoyen\Bpost\Bpost;
-
 use \TijsVerkoyen\Bpost\Bpost\Order;
 use \TijsVerkoyen\Bpost\Bpost\Order\Address;
 use \TijsVerkoyen\Bpost\Bpost\Order\Box;
-use \TijsVerkoyen\Bpost\Bpost\Order\Box\AtHome;
-use \TijsVerkoyen\Bpost\Bpost\Order\Box\AtBpost;
 use \TijsVerkoyen\Bpost\Bpost\Order\Box\At247;
+use \TijsVerkoyen\Bpost\Bpost\Order\Box\AtBpost;
+use \TijsVerkoyen\Bpost\Bpost\Order\Box\AtHome;
 use \TijsVerkoyen\Bpost\Bpost\Order\Box\Customsinfo\CustomsInfo;
 use \TijsVerkoyen\Bpost\Bpost\Order\Box\International;
 use \TijsVerkoyen\Bpost\Bpost\Order\Box\Option\AutomaticSecondPresentation;
@@ -19,18 +19,13 @@ use \TijsVerkoyen\Bpost\Bpost\Order\Box\Option\CashOnDelivery;
 use \TijsVerkoyen\Bpost\Bpost\Order\Box\Option\Insurance;
 use \TijsVerkoyen\Bpost\Bpost\Order\Box\Option\Messaging;
 use \TijsVerkoyen\Bpost\Bpost\Order\Box\Option\Signature;
-use \TijsVerkoyen\Bpost\Bpost\Order\Box\Openinghour\Day as OpeninghourDay;
 use \TijsVerkoyen\Bpost\Bpost\Order\Line as OrderLine;
-use \TijsVerkoyen\Bpost\Bpost\Order\Receiver;
-use \TijsVerkoyen\Bpost\Bpost\Order\Sender;
 use \TijsVerkoyen\Bpost\Bpost\Order\ParcelsDepotAddress;
 use \TijsVerkoyen\Bpost\Bpost\Order\PugoAddress;
-
-use \TijsVerkoyen\Bpost\Geo6;
-
+use \TijsVerkoyen\Bpost\Bpost\Order\Receiver;
+use \TijsVerkoyen\Bpost\Bpost\Order\Sender;
 use \TijsVerkoyen\Bpost\FormHandler;
-
-use \TijsVerkoyen\Bpost\Bpack247;
+use \TijsVerkoyen\Bpost\Geo6;
 
 // create instance
 $bpost = new Bpost(ACCOUNT_ID, PASSPHRASE);

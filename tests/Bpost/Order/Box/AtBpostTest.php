@@ -27,23 +27,23 @@ class AtBpostTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'atBpost' => array(
-                'product' => 'bpack@bpost',
-                'weight' => 2000,
-                'pugoId' => '207500',
-                'pugoName' => 'WIJNEGEM',
-                'pugoAddress' => array(
-                    'streetName' => 'Turnhoutsebaan',
-                    'number' => '468',
-                    'postalCode' => '2110',
-                    'locality' => 'WIJNEGEM',
+        $data = [
+            'atBpost' => [
+                'product'     => 'bpack@bpost',
+                'weight'      => 2000,
+                'pugoId'      => '207500',
+                'pugoName'    => 'WIJNEGEM',
+                'pugoAddress' => [
+                    'streetName'  => 'Turnhoutsebaan',
+                    'number'      => '468',
+                    'postalCode'  => '2110',
+                    'locality'    => 'WIJNEGEM',
                     'countryCode' => 'BE',
-                ),
-                'receiverName' => 'Tijs Verkoyen',
+                ],
+                'receiverName'    => 'Tijs Verkoyen',
                 'receiverCompany' => 'Sumo Coders',
-            ),
-        );
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $nationalBox = $expectedDocument->createElement('nationalBox');

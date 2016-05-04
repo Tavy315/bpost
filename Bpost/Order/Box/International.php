@@ -1,9 +1,9 @@
 <?php
 namespace TijsVerkoyen\Bpost\Bpost\Order\Box;
 
-use TijsVerkoyen\Bpost\Exception;
 use TijsVerkoyen\Bpost\Bpost\Order\Box\Customsinfo\CustomsInfo;
 use TijsVerkoyen\Bpost\Bpost\Order\Receiver;
+use TijsVerkoyen\Bpost\Exception;
 
 /**
  * bPost International class
@@ -42,10 +42,14 @@ class International implements IBox
 
     /**
      * @param \TijsVerkoyen\Bpost\Bpost\Order\Box\CustomsInfo\CustomsInfo $customsInfo
+     *
+     * @return $this
      */
     public function setCustomsInfo($customsInfo)
     {
         $this->customsInfo = $customsInfo;
+
+        return $this;
     }
 
     /**
@@ -58,10 +62,14 @@ class International implements IBox
 
     /**
      * @param array $options
+     *
+     * @return $this
      */
     public function setOptions($options)
     {
         $this->options = $options;
+
+        return $this;
     }
 
     /**
@@ -82,10 +90,14 @@ class International implements IBox
 
     /**
      * @param int $parcelWeight
+     *
+     * @return $this
      */
     public function setParcelWeight($parcelWeight)
     {
         $this->parcelWeight = $parcelWeight;
+
+        return $this;
     }
 
     /**
@@ -98,6 +110,9 @@ class International implements IBox
 
     /**
      * @param string $product
+     *
+     * @return $this
+     * @throws Exception
      */
     public function setProduct($product)
     {
@@ -111,6 +126,8 @@ class International implements IBox
         }
 
         $this->product = $product;
+
+        return $this;
     }
 
     /**
@@ -126,19 +143,23 @@ class International implements IBox
      */
     public static function getPossibleProductValues()
     {
-        return array(
+        return [
             'bpack World Business',
             'bpack World Express Pro',
             'bpack Europe Business',
-        );
+        ];
     }
 
     /**
      * @param \TijsVerkoyen\Bpost\Bpost\Order\Receiver $receiver
+     *
+     * @return $this
      */
     public function setReceiver($receiver)
     {
         $this->receiver = $receiver;
+
+        return $this;
     }
 
     /**
@@ -152,8 +173,9 @@ class International implements IBox
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
+     * @param \DomDocument $document
+     * @param string       $prefix
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null)
@@ -212,12 +234,13 @@ class International implements IBox
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return International
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $international = new International();
+        $international = new self();
 
         if (isset($xml->international->product) && $xml->international->product != '') {
             $international->setProduct(
@@ -228,7 +251,7 @@ class International implements IBox
             foreach ($xml->international->options as $optionData) {
                 $optionData = $optionData->children('http://schema.post.be/shm/deepintegration/v3/common');
 
-                if (in_array($optionData->getName(), array('infoDistributed'))) {
+                if (in_array($optionData->getName(), [ 'infoDistributed' ])) {
                     $option = Messaging::createFromXML($optionData);
                 } else {
                     $className = '\\TijsVerkoyen\\Bpost\\Bpost\\Order\\Box\\Option\\' . ucfirst($optionData->getName());
@@ -236,7 +259,7 @@ class International implements IBox
                         throw new Exception('Not Implemented');
                     }
                     $option = call_user_func(
-                        array($className, 'createFromXML'),
+                        [ $className, 'createFromXML' ],
                         $optionData
                     );
                 }

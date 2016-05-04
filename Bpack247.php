@@ -64,10 +64,12 @@ class Bpack247
     /**
      * Make the call
      *
-     * @param  string $url    The URL to call.
-     * @param  string $body   The data to pass.
-     * @param  string $method The HTTP-method to use.
-     * @return mixed
+     * @param string $url    The URL to call.
+     * @param string $body   The data to pass.
+     * @param string $method The HTTP-method to use.
+     *
+     * @return \SimpleXMLElement
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     private function doCall($url, $body = null, $method = 'GET')
     {
@@ -107,7 +109,7 @@ class Bpack247
         }
 
         // valid HTTP-code
-        if (!in_array($headers['http_code'], array(0, 200))) {
+        if (!in_array($headers['http_code'], [ 0, 200 ])) {
             $xml = @simplexml_load_string($response);
 
             if ($xml !== false && ($xml->getName() == 'businessException' || $xml->getName() == 'validationException')
@@ -166,7 +168,7 @@ class Bpack247
     }
 
     /**
-     * Get the useragent that will be used.
+     * Get the user-agent that will be used.
      * Our version will be prepended to yours.
      * It will look like: "PHP Bpost/<version> <your-user-agent>"
      *
@@ -209,30 +211,21 @@ class Bpack247
         $document->preserveWhiteSpace = false;
         $document->formatOutput = true;
 
-        $document->appendChild(
-            $customer->toXML(
-                $document
-            )
-        );
+        $document->appendChild($customer->toXML($document));
 
-        return $this->doCall(
-            $url,
-            $document->saveXML(),
-            'POST'
-        );
+        return $this->doCall($url, $document->saveXML(), 'POST');
     }
 
     /**
      * Retrieve member information
      *
-     * @param  string   $id
+     * @param string $id
+     *
      * @return Customer
      */
     public function getMember($id)
     {
-        $xml = $this->doCall(
-            '/customer/' . $id
-        );
+        $xml = $this->doCall('/customer/' . $id);
 
         return Customer::createFromXML($xml);
     }

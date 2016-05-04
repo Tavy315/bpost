@@ -28,18 +28,18 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'FirstName' => 'Tijs',
-            'LastName' => 'Verkoyen',
-            'Email' => 'bpost@verkoyen.eu',
-            'Street' => 'Afrikalaan',
-            'Number' => '289',
-            'MobilePrefix' => '0032',
-            'MobileNumber' => '486123456',
-            'PostalCode' => '9000',
+        $data = [
+            'FirstName'         => 'Tijs',
+            'LastName'          => 'Verkoyen',
+            'Email'             => 'bpost@verkoyen.eu',
+            'Street'            => 'Afrikalaan',
+            'Number'            => '289',
+            'MobilePrefix'      => '0032',
+            'MobileNumber'      => '486123456',
+            'PostalCode'        => '9000',
             'PreferredLanguage' => 'nl-BE',
-            'Title' => 'Mr.',
-        );
+            'Title'             => 'Mr.',
+        ];
 
         $expectedDocument = self::createDomDocument();
         $customer = $expectedDocument->createElement(
@@ -113,32 +113,32 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromXML()
     {
-        $data = array(
-            'UserID' => '5f1f1b07-a8c4-4d4c-bd5b-cdace6cb7c84',
-            'FirstName' => 'Bruno',
-            'LastName' => 'Vandenabeele',
-            'Street' => 'Oplintersesteenweg',
-            'Number' => '629',
-            'CompanyName' => 'Bpost',
-            'Country' => 'BE',
-            'DateOfBirth' => '1974-07-02',
-            'DeliveryCode' => '344337728',
-            'Email' => 'bruno.vandenabeele@telenet.be',
-            'MobilePrefix' => '0032',
-            'MobileNumber' => '475813445',
-            'Postalcode' => '3300',
+        $data = [
+            'UserID'            => '5f1f1b07-a8c4-4d4c-bd5b-cdace6cb7c84',
+            'FirstName'         => 'Bruno',
+            'LastName'          => 'Vandenabeele',
+            'Street'            => 'Oplintersesteenweg',
+            'Number'            => '629',
+            'CompanyName'       => 'Bpost',
+            'Country'           => 'BE',
+            'DateOfBirth'       => '1974-07-02',
+            'DeliveryCode'      => '344337728',
+            'Email'             => 'bruno.vandenabeele@telenet.be',
+            'MobilePrefix'      => '0032',
+            'MobileNumber'      => '475813445',
+            'Postalcode'        => '3300',
             'PreferredLanguage' => 'nl-BE',
             'ReceivePromotions' => true,
-            'actived' => true,
-            'Title' => 'Mr',
-            'Town' => 'Tienen',
-            'PackStations' => array(
-                array(
-                    'OrderNumber' => 1,
+            'actived'           => true,
+            'Title'             => 'Mr',
+            'Town'              => 'Tienen',
+            'PackStations'      => [
+                [
+                    'OrderNumber'   => 1,
                     'PackStationId' => 14472,
-                ),
-            )
-        );
+                ],
+            ],
+        ];
 
         $document = self::createDomDocument();
         $customerElement = $document->createElement('Customer');
@@ -237,16 +237,16 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingProperties()
     {
-        $data = array(
-            'IsComfortZoneUser' => true,
-            'OptIn' => true,
+        $data = [
+            'IsComfortZoneUser'           => true,
+            'OptIn'                       => true,
             'UseInformationForThirdParty' => false,
-            'UserName' => 'UserName',
-            'PackStations' => array(
+            'UserName'                    => 'UserName',
+            'PackStations'                => [
                 'Foo',
-                'Bar'
-            )
-        );
+                'Bar',
+            ],
+        ];
 
         $customer = new Customer();
 

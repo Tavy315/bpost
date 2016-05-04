@@ -39,10 +39,14 @@ class Customer
 
     /**
      * @param \TijsVerkoyen\Bpost\Bpost\Order\Address $address
+     *
+     * @return $this
      */
     public function setAddress($address)
     {
         $this->address = $address;
+
+        return $this;
     }
 
     /**
@@ -55,10 +59,14 @@ class Customer
 
     /**
      * @param string $company
+     *
+     * @return $this
      */
     public function setCompany($company)
     {
         $this->company = $company;
+
+        return $this;
     }
 
     /**
@@ -71,6 +79,9 @@ class Customer
 
     /**
      * @param string $emailAddress
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setEmailAddress($emailAddress)
     {
@@ -79,6 +90,8 @@ class Customer
             throw new Exception(sprintf('Invalid length, maximum is %1$s.', $length));
         }
         $this->emailAddress = $emailAddress;
+
+        return $this;
     }
 
     /**
@@ -91,10 +104,14 @@ class Customer
 
     /**
      * @param string $name
+     *
+     * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -107,6 +124,9 @@ class Customer
 
     /**
      * @param string $phoneNumber
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setPhoneNumber($phoneNumber)
     {
@@ -115,6 +135,8 @@ class Customer
             throw new Exception(sprintf('Invalid length, maximum is %1$s.', $length));
         }
         $this->phoneNumber = $phoneNumber;
+
+        return $this;
     }
 
     /**
@@ -129,7 +151,8 @@ class Customer
      * Return the object as an array for usage in the XML
      *
      * @param \DomDocument
-     * @param  string      $prefix
+     * @param string $prefix
+     *
      * @return \DomElement
      */
     public function toXML(\DomDocument $document, $prefix = null)
@@ -142,49 +165,28 @@ class Customer
         $customer = $document->createElement($tagName);
 
         if ($this->getName() !== null) {
-            $customer->appendChild(
-                $document->createElement(
-                    'common:name',
-                    $this->getName()
-                )
-            );
+            $customer->appendChild($document->createElement('common:name', $this->getName()));
         }
         if ($this->getCompany() !== null) {
-            $customer->appendChild(
-                $document->createElement(
-                    'common:company',
-                    $this->getCompany()
-                )
-            );
+            $customer->appendChild($document->createElement('common:company', $this->getCompany()));
         }
         if ($this->getAddress() !== null) {
-            $customer->appendChild(
-                $this->getAddress()->toXML($document)
-            );
+            $customer->appendChild($this->getAddress()->toXML($document));
         }
         if ($this->getEmailAddress() !== null) {
-            $customer->appendChild(
-                $document->createElement(
-                    'common:emailAddress',
-                    $this->getEmailAddress()
-                )
-            );
+            $customer->appendChild($document->createElement('common:emailAddress', $this->getEmailAddress()));
         }
         if ($this->getPhoneNumber() !== null) {
-            $customer->appendChild(
-                $document->createElement(
-                    'common:phoneNumber',
-                    $this->getPhoneNumber()
-                )
-            );
+            $customer->appendChild($document->createElement('common:phoneNumber', $this->getPhoneNumber()));
         }
 
         return $customer;
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
-     * @param  Customer          $instance
+     * @param \SimpleXMLElement $xml
+     * @param Customer          $instance
+     *
      * @return Customer
      */
     public static function createFromXMLHelper(\SimpleXMLElement $xml, Customer $instance)

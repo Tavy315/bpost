@@ -1,7 +1,6 @@
 <?php
 namespace TijsVerkoyen\Bpost;
 
-use TijsVerkoyen\Bpost\Exception;
 use TijsVerkoyen\Bpost\Geo6\Poi;
 
 /**
@@ -46,6 +45,7 @@ class Geo6
 
     /**
      * Constructor
+     *
      * @param string $partner Static parameter used for protection/statistics
      * @param string $appId   Static parameter used for protection/statistics
      */
@@ -58,8 +58,9 @@ class Geo6
     /**
      * Build the url to be called
      *
-     * @param  string     $method
-     * @param  array|null $parameters
+     * @param string     $method
+     * @param array|null $parameters
+     *
      * @return string
      */
     private function buildUrl($method, $parameters = null)
@@ -76,9 +77,11 @@ class Geo6
     /**
      * Make the real call
      *
-     * @param  string           $method
-     * @param  array|null       $parameters
-     * @return SimpleXMLElement
+     * @param string     $method
+     * @param array|null $parameters
+     *
+     * @return \SimpleXMLElement
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     private function doCall($method, $parameters = null)
     {
@@ -176,7 +179,7 @@ class Geo6
     }
 
     /**
-     * Get the useragent that will be used.
+     * Get the user-agent that will be used.
      * Our version will be prepended to yours.
      * It will look like: "PHP Bpost/<version> <your-user-agent>"
      *
@@ -207,17 +210,19 @@ class Geo6
      * @param string $zone     Postal code and/or city
      * @param string $language Language, possible values are: nl, fr
      * @param int    $type     Requested point type, possible values are:
-     *                              1: Post Office
-     *                              2: Post Point
-     *                              3: (1+2, Post Office + Post Point)
-     *                              4: bpack 24/7
-     *                              7: (1+2+4, Post Office + Post Point + bpack 24/7)
-     * @param  int   $limit
+     *                         1: Post Office
+     *                         2: Post Point
+     *                         3: (1+2, Post Office + Post Point)
+     *                         4: bpack 24/7
+     *                         7: (1+2+4, Post Office + Post Point + bpack 24/7)
+     * @param int    $limit
+     *
      * @return array
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function getNearestServicePoint($street, $number, $zone, $language = 'nl', $type = 3, $limit = 10)
     {
-        $parameters = array();
+        $parameters = [ ];
         $parameters['Street'] = (string) $street;
         $parameters['Number'] = (string) $number;
         $parameters['Zone'] = (string) $zone;
@@ -231,12 +236,12 @@ class Geo6
             throw new Exception('Invalid XML-response');
         }
 
-        $pois = array();
+        $pois = [ ];
         foreach ($xml->PoiList->Poi as $poi) {
-            $pois[] = array(
-                'poi' => Poi::createFromXML($poi->Record),
+            $pois[] = [
+                'poi'      => Poi::createFromXML($poi->Record),
                 'distance' => (float) $poi->Distance,
-            );
+            ];
         }
 
         return $pois;
@@ -249,14 +254,16 @@ class Geo6
      * @param string $id       Requested point identifier
      * @param string $language Language, possible values: nl, fr
      * @param int    $type     Requested point type, possible values are:
-     *                              1: Post Office
-     *                              2: Post Point
-     *                              4: bpack 24/7
+     *                         1: Post Office
+     *                         2: Post Point
+     *                         4: bpack 24/7
+     *
      * @return Poi
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function getServicePointDetails($id, $language = 'nl', $type = 3)
     {
-        $parameters = array();
+        $parameters = [ ];
         $parameters['Id'] = (string) $id;
         $parameters['Language'] = (string) $language;
         $parameters['Type'] = (int) $type;
@@ -271,14 +278,15 @@ class Geo6
     }
 
     /**
-     * @param         $id
-     * @param  string $language
-     * @param  int    $type
+     * @param        $id
+     * @param string $language
+     * @param int    $type
+     *
      * @return string
      */
     public function getServicePointPage($id, $language = 'nl', $type = 3)
     {
-        $parameters = array();
+        $parameters = [ ];
         $parameters['Id'] = (string) $id;
         $parameters['Language'] = (string) $language;
         $parameters['Type'] = (int) $type;

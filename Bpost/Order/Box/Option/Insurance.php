@@ -28,25 +28,21 @@ class Insurance extends Option
      */
     public static function getPossibleTypeValues()
     {
-        return array(
+        return [
             'basicInsurance',
             'additionalInsurance',
-        );
+        ];
     }
 
     /**
      * @param string $type
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setType($type)
     {
-
         if (!in_array($type, self::getPossibleTypeValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleTypeValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleTypeValues())));
         }
 
         $this->type = $type;
@@ -62,16 +58,13 @@ class Insurance extends Option
 
     /**
      * @param string $value
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setValue($value)
     {
         if (!in_array($value, self::getPossibleValueValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleValueValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleValueValues())));
         }
 
         $this->value = $value;
@@ -90,7 +83,7 @@ class Insurance extends Option
      */
     public static function getPossibleValueValues()
     {
-        return array(
+        return [
             2,
             3,
             4,
@@ -100,13 +93,13 @@ class Insurance extends Option
             8,
             9,
             10,
-            11
-        );
+            11,
+        ];
     }
 
     /**
      * @param string      $type
-     * @param string\null $value
+     * @param string|null $value
      */
     public function __construct($type, $value = null)
     {
@@ -119,8 +112,9 @@ class Insurance extends Option
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
+     * @param \DomDocument $document
+     * @param string       $prefix
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null)

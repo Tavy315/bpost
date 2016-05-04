@@ -38,15 +38,15 @@ class InsuranceTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expectedDocument, $actualDocument);
 
-        $data = array(
-            'insured' => array(
-                'additionalInsurance' => array(
-                    '@attributes' => array(
+        $data = [
+            'insured' => [
+                'additionalInsurance' => [
+                    '@attributes' => [
                         'value' => 3,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $insured = $expectedDocument->createElement('insured');
@@ -77,15 +77,15 @@ class InsuranceTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expectedDocument, $actualDocument);
 
-        $data = array(
-            'insured' => array(
-                'additionalInsurance' => array(
-                    '@attributes' => array(
+        $data = [
+            'insured' => [
+                'additionalInsurance' => [
+                    '@attributes' => [
                         'value' => 3,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $insured = $expectedDocument->createElement('foo:insured');

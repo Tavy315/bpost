@@ -28,10 +28,14 @@ abstract class National implements IBox
 
     /**
      * @param array $options
+     *
+     * @return $this
      */
     public function setOptions($options)
     {
         $this->options = $options;
+
+        return $this;
     }
 
     /**
@@ -44,18 +48,26 @@ abstract class National implements IBox
 
     /**
      * @param \TijsVerkoyen\Bpost\Bpost\Order\Box\Option\Option $option
+     *
+     * @return $this
      */
     public function addOption(Option\Option $option)
     {
         $this->options[] = $option;
+
+        return $this;
     }
 
     /**
      * @param string $product
+     *
+     * @return $this
      */
     public function setProduct($product)
     {
         $this->product = $product;
+
+        return $this;
     }
 
     /**
@@ -72,15 +84,19 @@ abstract class National implements IBox
      */
     public static function getPossibleProductValues()
     {
-        return array();
+        return [ ];
     }
 
     /**
      * @param int $weight
+     *
+     * @return $this
      */
     public function setWeight($weight)
     {
         $this->weight = $weight;
+
+        return $this;
     }
 
     /**
@@ -94,9 +110,10 @@ abstract class National implements IBox
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
-     * @param  string       $type
+     * @param \DomDocument $document
+     * @param string       $prefix
+     * @param string       $type
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null, $type = null)
@@ -144,7 +161,8 @@ abstract class National implements IBox
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return National
      */
     public static function createFromXML(\SimpleXMLElement $xml)

@@ -2,9 +2,9 @@
 
 namespace TijsVerkoyen\Bpost\Bpost;
 
-use TijsVerkoyen\Bpost\Exception;
 use TijsVerkoyen\Bpost\Bpost\Order\Box;
 use TijsVerkoyen\Bpost\Bpost\Order\Line;
+use TijsVerkoyen\Bpost\Exception;
 
 /**
  * bPost Order class
@@ -59,10 +59,14 @@ class Order
 
     /**
      * @param array $boxes
+     *
+     * @return $this
      */
     public function setBoxes($boxes)
     {
         $this->boxes = $boxes;
+
+        return $this;
     }
 
     /**
@@ -76,19 +80,27 @@ class Order
     /**
      * Add a box
      *
-     * @param \TijsVerkoyen\Bpost\Bpost\Order\Box $box
+     * @param Box $box
+     *
+     * @return $this
      */
-    public function addBox(\TijsVerkoyen\Bpost\Bpost\Order\Box $box)
+    public function addBox(Box $box)
     {
         $this->boxes[] = $box;
+
+        return $this;
     }
 
     /**
      * @param string $costCenter
+     *
+     * @return $this
      */
     public function setCostCenter($costCenter)
     {
         $this->costCenter = $costCenter;
+
+        return $this;
     }
 
     /**
@@ -101,10 +113,14 @@ class Order
 
     /**
      * @param array $lines
+     *
+     * @return $this
      */
     public function setLines($lines)
     {
         $this->lines = $lines;
+
+        return $this;
     }
 
     /**
@@ -118,19 +134,23 @@ class Order
     /**
      * Add an order line
      *
-     * @param \TijsVerkoyen\Bpost\Bpost\Order\Line $line
+     * @param Line $line
      */
-    public function addLine(\TijsVerkoyen\Bpost\Bpost\Order\Line $line)
+    public function addLine(Line $line)
     {
         $this->lines[] = $line;
     }
 
     /**
      * @param string $reference
+     *
+     * @return $this
      */
     public function setReference($reference)
     {
         $this->reference = $reference;
+
+        return $this;
     }
 
     /**
@@ -144,83 +164,45 @@ class Order
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DOMDocument $document
-     * @param  string       $accountId
+     * @param \DOMDocument $document
+     * @param string       $accountId
+     *
      * @return \DOMElement
      */
     public function toXML(\DOMDocument $document, $accountId)
     {
-        $order = $document->createElement(
-            'tns:order'
-        );
-        $order->setAttribute(
-            'xmlns:common',
-            'http://schema.post.be/shm/deepintegration/v3/common'
-        );
-        $order->setAttribute(
-            'xmlns:tns',
-            'http://schema.post.be/shm/deepintegration/v3/'
-        );
-        $order->setAttribute(
-            'xmlns',
-            'http://schema.post.be/shm/deepintegration/v3/national'
-        );
-        $order->setAttribute(
-            'xmlns:international',
-            'http://schema.post.be/shm/deepintegration/v3/international'
-        );
-        $order->setAttribute(
-            'xmlns:xsi',
-            'http://www.w3.org/2001/XMLSchema-instance'
-        );
-        $order->setAttribute(
-            'xsi:schemaLocation',
-            'http://schema.post.be/shm/deepintegration/v3/'
-        );
+        $order = $document->createElement('tns:order');
+        $order->setAttribute('xmlns:common', 'http://schema.post.be/shm/deepintegration/v3/common');
+        $order->setAttribute('xmlns:tns', 'http://schema.post.be/shm/deepintegration/v3/');
+        $order->setAttribute('xmlns', 'http://schema.post.be/shm/deepintegration/v3/national');
+        $order->setAttribute('xmlns:international', 'http://schema.post.be/shm/deepintegration/v3/international');
+        $order->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+        $order->setAttribute('xsi:schemaLocation', 'http://schema.post.be/shm/deepintegration/v3/');
 
         $document->appendChild($order);
 
-        $order->appendChild(
-            $document->createElement(
-                'tns:accountId',
-                (string) $accountId
-            )
-        );
+        $order->appendChild($document->createElement('tns:accountId', (string) $accountId));
 
         if ($this->getReference() !== null) {
-            $order->appendChild(
-                $document->createElement(
-                    'tns:reference',
-                    $this->getReference()
-                )
-            );
+            $order->appendChild($document->createElement('tns:reference', $this->getReference()));
         }
         if ($this->getCostCenter() !== null) {
-            $order->appendChild(
-                $document->createElement(
-                    'tns:costCenter',
-                    $this->getCostCenter()
-                )
-            );
+            $order->appendChild($document->createElement('tns:costCenter', $this->getCostCenter()));
         }
 
         $lines = $this->getLines();
         if (!empty($lines)) {
             foreach ($lines as $line) {
-                /** @var $line \TijsVerkoyen\Bpost\Bpost\Order\Line */
-                $order->appendChild(
-                    $line->toXML($document, 'tns')
-                );
+                /** @var Line $line */
+                $order->appendChild($line->toXML($document, 'tns'));
             }
         }
 
         $boxes = $this->getBoxes();
         if (!empty($boxes)) {
             foreach ($boxes as $box) {
-                /** @var $box \TijsVerkoyen\Bpost\Bpost\Order\Box */
-                $order->appendChild(
-                    $box->toXML($document, 'tns')
-                );
+                /** @var Box $box */
+                $order->appendChild($box->toXML($document, 'tns'));
             }
         }
 
@@ -228,8 +210,10 @@ class Order
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
-     * @return Order
+     * @param \SimpleXMLElement $xml
+     *
+     * @return $this
+     * @throws Exception
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
@@ -238,16 +222,14 @@ class Order
             throw new Exception('No reference found.');
         }
 
-        $order = new Order((string) $xml->reference);
+        $order = new self((string) $xml->reference);
 
         if (isset($xml->costCenter) && $xml->costCenter != '') {
             $order->setCostCenter((string) $xml->costCenter);
         }
         if (isset($xml->orderLine)) {
             foreach ($xml->orderLine as $orderLine) {
-                $order->addLine(
-                    Line::createFromXML($orderLine)
-                );
+                $order->addLine(Line::createFromXML($orderLine));
             }
         }
         if (isset($xml->box)) {

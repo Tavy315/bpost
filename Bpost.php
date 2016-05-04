@@ -91,17 +91,20 @@ class Bpost
     /**
      * Decode the response
      *
-     * @param  SimpleXMLElement $item   The item to decode.
-     * @param  array            $return Just a placeholder.
-     * @param  int              $i      A internal counter.
+     * @param \SimpleXMLElement $item   The item to decode.
+     * @param array             $return Just a placeholder.
+     * @param int               $i      A internal counter.
+     *
      * @return array
+     * @throws \Exception
      */
     private static function decodeResponse($item, $return = null, $i = 0)
     {
-        $arrayKeys = array('barcode', 'orderLine', 'additionalInsurance', 'infoDistributed', 'infoPugo');
-        $integerKeys = array('totalPrice');
+        $arrayKeys = [ 'barcode', 'orderLine', 'additionalInsurance', 'infoDistributed', 'infoPugo' ];
+        $integerKeys = [ 'totalPrice' ];
 
-        if ($item instanceof SimpleXMLElement) {
+        if ($item instanceof \SimpleXMLElement) {
+            /** @var \SimpleXMLElement $value */
             foreach ($item as $key => $value) {
                 $attributes = (array) $value->attributes();
 
@@ -147,14 +150,16 @@ class Bpost
     /**
      * Make the call
      *
-     * @param  string $url       The URL to call.
-     * @param  string $body      The data to pass.
-     * @param  array  $headers   The headers to pass.
-     * @param  string $method    The HTTP-method to use.
-     * @param  bool   $expectXML Do we expect XML?
+     * @param string $url       The URL to call.
+     * @param string $body      The data to pass.
+     * @param array  $headers   The headers to pass.
+     * @param string $method    The HTTP-method to use.
+     * @param bool   $expectXML Do we expect XML?
+     *
      * @return mixed
+     * @throws \Exception
      */
-    private function doCall($url, $body = null, $headers = array(), $method = 'GET', $expectXML = true)
+    private function doCall($url, $body = null, $headers = [ ], $method = 'GET', $expectXML = true)
     {
         // build Authorization header
         $headers[] = 'Authorization: Basic ' . $this->getAuthorizationHeader();
@@ -194,8 +199,11 @@ class Bpost
             throw new Exception($errorMessage, $errorNumber);
         }
 
+//        \Zend_Debug::dump($body);
+//        \Zend_Debug::dump($response);
+
         // valid HTTP-code
-        if (!in_array($headers['http_code'], array(0, 200, 201))) {
+        if (!in_array($headers['http_code'], [ 0, 200, 201 ])) {
             // convert into XML
             $xml = @simplexml_load_string($response);
 
@@ -212,7 +220,7 @@ class Bpost
 
             if (
                 (isset($headers['content_type']) && substr_count($headers['content_type'], 'text/plain') > 0) ||
-                (in_array($headers['http_code'], array(400, 404)))
+                (in_array($headers['http_code'], [ 400, 404 ]))
             ) {
                 $message = $response;
             } else {
@@ -285,7 +293,7 @@ class Bpost
     }
 
     /**
-     * Get the useragent that will be used.
+     * Get the user-agent that will be used.
      * Our version will be prepended to yours.
      * It will look like: "PHP Bpost/<version> <your-user-agent>"
      *
@@ -319,11 +327,12 @@ class Bpost
     }
 
     // webservice methods
-// orders
+    // orders
     /**
      * Creates a new order. If an order with the same orderReference already exists
      *
-     * @param  Order $order
+     * @param Order $order
+     *
      * @return bool
      */
     public function createOrReplaceOrder(Order $order)
@@ -334,46 +343,30 @@ class Bpost
         $document->preserveWhiteSpace = false;
         $document->formatOutput = true;
 
-        $document->appendChild(
-            $order->toXML(
-                $document,
-                $this->accountId
-            )
-        );
+        $document->appendChild($order->toXML($document, $this->accountId));
 
-        $headers = array(
-            'Content-type: application/vnd.bpost.shm-order-v3.3+XML'
-        );
+        $headers = [
+            'Content-type: application/vnd.bpost.shm-order-v3.3+XML',
+        ];
 
-        return (
-            $this->doCall(
-                $url,
-                $document->saveXML(),
-                $headers,
-                'POST',
-                false
-            ) == ''
-        );
+        return ($this->doCall($url, $document->saveXML(), $headers, 'POST', false) == '');
     }
 
     /**
      * Fetch an order
      *
      * @param $reference
+     *
      * @return Order
      */
     public function fetchOrder($reference)
     {
         $url = '/orders/' . (string) $reference;
 
-        $headers = array(
+        $headers = [
             'Accept: application/vnd.bpost.shm-order-v3.3+XML',
-        );
-        $xml = $this->doCall(
-            $url,
-            null,
-            $headers
-        );
+        ];
+        $xml = $this->doCall($url, null, $headers);
 
         return Order::createFromXML($xml);
     }
@@ -381,20 +374,17 @@ class Bpost
     /**
      * Modify the status for an order.
      *
-     * @param  string $reference The reference for an order
-     * @param  string $status    The new status, allowed values are: OPEN, PENDING, CANCELLED, COMPLETED, ON-HOLD or PRINTED
+     * @param string $reference The reference for an order
+     * @param string $status    The new status, allowed values are: OPEN, PENDING, CANCELLED, COMPLETED, ON-HOLD or PRINTED
+     *
      * @return bool
+     * @throws \Exception
      */
     public function modifyOrderStatus($reference, $status)
     {
         $status = strtoupper($status);
         if (!in_array($status, Box::getPossibleStatusValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', Box::getPossibleStatusValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', Box::getPossibleStatusValues())));
         }
 
         $url = '/orders/' . $reference;
@@ -406,27 +396,17 @@ class Bpost
         $orderUpdate = $document->createElement('orderUpdate');
         $orderUpdate->setAttribute('xmlns', 'http://schema.post.be/shm/deepintegration/v3/');
         $orderUpdate->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $orderUpdate->appendChild(
-            $document->createElement('status', $status)
-        );
+        $orderUpdate->appendChild($document->createElement('status', $status));
         $document->appendChild($orderUpdate);
 
-        $headers = array(
-            'Content-type: application/vnd.bpost.shm-orderUpdate-v3+XML'
-        );
+        $headers = [
+            'Content-type: application/vnd.bpost.shm-orderUpdate-v3+XML',
+        ];
 
-        return (
-            $this->doCall(
-                $url,
-                $document->saveXML(),
-                $headers,
-                'POST',
-                false
-            ) == ''
-        );
+        return ($this->doCall($url, $document->saveXML(), $headers, 'POST', false) == '');
     }
 
-// labels
+    // labels
     /**
      * Get the possible label formats
      *
@@ -434,31 +414,28 @@ class Bpost
      */
     public static function getPossibleLabelFormatValues()
     {
-        return array(
+        return [
             'A4',
             'A6',
-        );
+        ];
     }
 
     /**
      * Generic method to centralize handling of labels
      *
-     * @param  string $url
-     * @param  string $format
-     * @param  bool   $withReturnLabels
-     * @param  bool   $asPdf
+     * @param string $url
+     * @param string $format
+     * @param bool   $withReturnLabels
+     * @param bool   $asPdf
+     *
      * @return Label[]
+     * @throws \Exception
      */
     protected function getLabel($url, $format = 'A6', $withReturnLabels = false, $asPdf = false)
     {
         $format = strtoupper($format);
         if (!in_array($format, self::getPossibleLabelFormatValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleLabelFormatValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleLabelFormatValues())));
         }
 
         $url .= '/labels/' . $format;
@@ -467,22 +444,18 @@ class Bpost
         }
 
         if ($asPdf) {
-            $headers = array(
+            $headers = [
                 'Accept: application/vnd.bpost.shm-label-pdf-v3+XML',
-            );
+            ];
         } else {
-            $headers = array(
+            $headers = [
                 'Accept: application/vnd.bpost.shm-label-image-v3+XML',
-            );
+            ];
         }
 
-        $xml = $this->doCall(
-            $url,
-            null,
-            $headers
-        );
+        $xml = $this->doCall($url, null, $headers);
 
-        $labels = array();
+        $labels = [ ];
 
         if (isset($xml->label)) {
             foreach ($xml->label as $label) {
@@ -499,10 +472,11 @@ class Bpost
      * Boxes that were unprinted will get the status PRINTED, the boxes that
      * had already been printed will remain the same.
      *
-     * @param  string $reference        The reference for an order
-     * @param  string $format           The desired format, allowed values are: A4, A6
-     * @param  bool   $withReturnLabels Should return labels be returned?
-     * @param  bool   $asPdf            Should we retrieve the PDF-version instead of PNG
+     * @param string $reference        The reference for an order
+     * @param string $format           The desired format, allowed values are: A4, A6
+     * @param bool   $withReturnLabels Should return labels be returned?
+     * @param bool   $asPdf            Should we retrieve the PDF-version instead of PNG
+     *
      * @return Label[]
      */
     public function createLabelForOrder($reference, $format = 'A6', $withReturnLabels = false, $asPdf = false)
@@ -515,10 +489,11 @@ class Bpost
     /**
      * Create a label for a known barcode.
      *
-     * @param  string $barcode          The barcode of the parcel
-     * @param  string $format           The desired format, allowed values are: A4, A6
-     * @param  bool   $withReturnLabels Should return labels be returned?
-     * @param  bool   $asPdf            Should we retrieve the PDF-version instead of PNG
+     * @param string $barcode          The barcode of the parcel
+     * @param string $format           The desired format, allowed values are: A4, A6
+     * @param bool   $withReturnLabels Should return labels be returned?
+     * @param bool   $asPdf            Should we retrieve the PDF-version instead of PNG
+     *
      * @return Label[]
      */
     public function createLabelForBox($barcode, $format = 'A6', $withReturnLabels = false, $asPdf = false)
@@ -534,26 +509,19 @@ class Bpost
      * request, the service will return a label of every box of that order. If
      * a certain box was not yet printed, it will have the status PRINTED
      *
-     * @param  array  $references       The references for the order
-     * @param  string $format           The desired format, allowed values are: A4, A6
-     * @param  bool   $withReturnLabels Should return labels be returned?
-     * @param  bool   $asPdf            Should we retrieve the PDF-version instead of PNG
+     * @param array  $references       The references for the order
+     * @param string $format           The desired format, allowed values are: A4, A6
+     * @param bool   $withReturnLabels Should return labels be returned?
+     * @param bool   $asPdf            Should we retrieve the PDF-version instead of PNG
+     *
      * @return Label[]
+     * @throws \Exception
      */
-    public function createLabelInBulkForOrders(
-        array $references,
-        $format = 'A6',
-        $withReturnLabels = false,
-        $asPdf = false
-    ) {
+    public function createLabelInBulkForOrders(array $references, $format = 'A6', $withReturnLabels = false, $asPdf = false)
+    {
         $format = strtoupper($format);
         if (!in_array($format, self::getPossibleLabelFormatValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleLabelFormatValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleLabelFormatValues())));
         }
 
         $url = '/labels/' . $format;
@@ -563,13 +531,13 @@ class Bpost
         }
 
         if ($asPdf) {
-            $headers = array(
+            $headers = [
                 'Accept: application/vnd.bpost.shm-label-pdf-v3+XML',
-            );
+            ];
         } else {
-            $headers = array(
+            $headers = [
                 'Accept: application/vnd.bpost.shm-label-image-v3+XML',
-            );
+            ];
         }
         $headers[] = 'Content-Type: application/vnd.bpost.shm-labelRequest-v3+XML';
 
@@ -580,20 +548,13 @@ class Bpost
         $batchLabels = $document->createElement('batchLabels');
         $batchLabels->setAttribute('xmlns', 'http://schema.post.be/shm/deepintegration/v3/');
         foreach ($references as $reference) {
-            $batchLabels->appendChild(
-                $document->createElement('order', $reference)
-            );
+            $batchLabels->appendChild($document->createElement('order', $reference));
         }
         $document->appendChild($batchLabels);
 
-        $xml = $this->doCall(
-            $url,
-            $document->saveXML(),
-            $headers,
-            'POST'
-        );
+        $xml = $this->doCall($url, $document->saveXML(), $headers, 'POST');
 
-        $labels = array();
+        $labels = [ ];
 
         if (isset($xml->label)) {
             foreach ($xml->label as $label) {

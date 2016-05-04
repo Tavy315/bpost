@@ -27,16 +27,20 @@ class AtHome extends National
     private $desiredDeliveryPlace;
 
     /**
-     * @var \TijsVerkoyen\Bpost\Bpost\Order\Receiver
+     * @var Receiver
      */
     private $receiver;
 
     /**
      * @param string $desiredDeliveryPlace
+     *
+     * @return $this
      */
     public function setDesiredDeliveryPlace($desiredDeliveryPlace)
     {
         $this->desiredDeliveryPlace = $desiredDeliveryPlace;
+
+        return $this;
     }
 
     /**
@@ -49,16 +53,20 @@ class AtHome extends National
 
     /**
      * @param array $openingHours
+     *
+     * @return $this
      */
     public function setOpeningHours($openingHours)
     {
         $this->openingHours = $openingHours;
+
+        return $this;
     }
 
     /**
-     * @param \TijsVerkoyen\Bpost\Bpost\Order\Box\Openinghour\Day $day
+     * @param Day $day
      */
-    public function addOpeningHour(\TijsVerkoyen\Bpost\Bpost\Order\Box\Openinghour\Day $day)
+    public function addOpeningHour(Day $day)
     {
         $this->openingHours[] = $day;
     }
@@ -73,24 +81,22 @@ class AtHome extends National
 
     /**
      * @param string $product Possible values are:
-     *                          * bpack 24h Pro,
-     *                          * bpack 24h business
-     *                          * bpack Bus
-     *                          * bpack Pallet
-     *                          * bpack Easy Retour
+     *                        * bpack 24h Pro,
+     *                        * bpack 24h business
+     *                        * bpack Bus
+     *                        * bpack Pallet
+     *                        * bpack Easy Retour
+     *
+     * @return $this
+     * @throws Exception
      */
     public function setProduct($product)
     {
         if (!in_array($product, self::getPossibleProductValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleProductValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleProductValues())));
         }
 
-        parent::setProduct($product);
+        return parent::setProduct($product);
     }
 
     /**
@@ -98,25 +104,29 @@ class AtHome extends National
      */
     public static function getPossibleProductValues()
     {
-        return array(
+        return [
             'bpack 24h Pro',
             'bpack 24h business',
             'bpack Bus',
             'bpack Pallet',
             'bpack Easy Retour',
-        );
+        ];
     }
 
     /**
-     * @param \TijsVerkoyen\Bpost\Bpost\Order\Receiver $receiver
+     * @param Receiver $receiver
+     *
+     * @return $this
      */
     public function setReceiver($receiver)
     {
         $this->receiver = $receiver;
+
+        return $this;
     }
 
     /**
-     * @return \TijsVerkoyen\Bpost\Bpost\Order\Receiver
+     * @return Receiver
      */
     public function getReceiver()
     {
@@ -126,9 +136,10 @@ class AtHome extends National
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
-     * @param  string       $type
+     * @param \DomDocument $document
+     * @param string       $prefix
+     * @param string       $type
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null, $type = null)
@@ -146,9 +157,7 @@ class AtHome extends National
             $openingHoursElement = $document->createElement('openingHours');
             foreach ($openingHours as $day) {
                 /** @var $day \TijsVerkoyen\Bpost\Bpost\Order\Box\Openinghour\Day */
-                $openingHoursElement->appendChild(
-                    $day->toXML($document)
-                );
+                $openingHoursElement->appendChild($day->toXML($document));
             }
             $boxElement->appendChild($openingHoursElement);
         }
@@ -158,41 +167,36 @@ class AtHome extends National
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $boxElement->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getDesiredDeliveryPlace()
-                )
-            );
+            $boxElement->appendChild($document->createElement($tagName, $this->getDesiredDeliveryPlace()));
         }
 
         if ($this->getReceiver() !== null) {
-            $boxElement->appendChild(
-                $this->getReceiver()->toXML($document)
-            );
+            $boxElement->appendChild($this->getReceiver()->toXML($document));
         }
 
         return $nationalElement;
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return AtHome
+     * @throws Exception
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $atHome = new AtHome();
+        $atHome = new self();
 
         if (isset($xml->atHome->product) && $xml->atHome->product != '') {
             $atHome->setProduct(
                 (string) $xml->atHome->product
             );
         }
-        if (isset($xml->atHome->options) and !empty($xml->atHome->options)) {
+        if (isset($xml->atHome->options) && !empty($xml->atHome->options)) {
             foreach ($xml->atHome->options as $optionData) {
                 $optionData = $optionData->children('http://schema.post.be/shm/deepintegration/v3/common');
 
-                if (in_array($optionData->getName(), array('infoDistributed'))) {
+                if (in_array($optionData->getName(), [ 'infoDistributed' ])) {
                     $option = Messaging::createFromXML($optionData);
                 } else {
                     $className = '\\TijsVerkoyen\\Bpost\\Bpost\\Order\\Box\\Option\\' . ucfirst($optionData->getName());
@@ -200,7 +204,7 @@ class AtHome extends National
                         throw new Exception('Not Implemented');
                     }
                     $option = call_user_func(
-                        array($className, 'createFromXML'),
+                        [ $className, 'createFromXML' ],
                         $optionData
                     );
                 }
@@ -209,27 +213,17 @@ class AtHome extends National
             }
         }
         if (isset($xml->atHome->weight) && $xml->atHome->weight != '') {
-            $atHome->setWeight(
-                (int) $xml->atHome->weight
-            );
+            $atHome->setWeight((int) $xml->atHome->weight);
         }
         if (isset($xml->atHome->openingHours) && $xml->atHome->openingHours != '') {
             throw new Exception('Not Implemented');
-            $atHome->setProduct(
-                (string) $xml->atHome->openingHours
-            );
+            $atHome->setProduct((string) $xml->atHome->openingHours);
         }
         if (isset($xml->atHome->desiredDeliveryPlace) && $xml->atHome->desiredDeliveryPlace != '') {
-            $atHome->setDesiredDeliveryPlace(
-                (string) $xml->atHome->desiredDeliveryPlace
-            );
+            $atHome->setDesiredDeliveryPlace((string) $xml->atHome->desiredDeliveryPlace);
         }
         if (isset($xml->atHome->receiver)) {
-            $atHome->setReceiver(
-                Receiver::createFromXML(
-                    $xml->atHome->receiver->children('http://schema.post.be/shm/deepintegration/v3/common')
-                )
-            );
+            $atHome->setReceiver(Receiver::createFromXML($xml->atHome->receiver->children('http://schema.post.be/shm/deepintegration/v3/common')));
         }
 
         return $atHome;

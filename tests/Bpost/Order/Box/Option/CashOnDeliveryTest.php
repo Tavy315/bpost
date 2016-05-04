@@ -26,13 +26,13 @@ class CashOnDeliveryTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'cod' => array(
+        $data = [
+            'cod' => [
                 'codAmount' => 1251,
-                'iban' => 'BE19210023508812',
-                'bic' => 'GEBABEBB',
-            ),
-        );
+                'iban'      => 'BE19210023508812',
+                'bic'       => 'GEBABEBB',
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $cod = $expectedDocument->createElement('cod');
@@ -55,13 +55,13 @@ class CashOnDeliveryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedDocument, $actualDocument);
 
-        $data = array(
-            'cod' => array(
+        $data = [
+            'cod' => [
                 'codAmount' => 1251,
-                'iban' => 'BE19210023508812',
-                'bic' => 'GEBABEBB',
-            ),
-        );
+                'iban'      => 'BE19210023508812',
+                'bic'       => 'GEBABEBB',
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $cod = $expectedDocument->createElement('foo:cod');

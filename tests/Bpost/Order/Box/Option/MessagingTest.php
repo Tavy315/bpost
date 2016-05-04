@@ -26,14 +26,14 @@ class MessagingTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'infoDistributed' => array(
-                '@attributes' => array(
+        $data = [
+            'infoDistributed' => [
+                '@attributes' => [
                     'language' => 'EN',
-                ),
+                ],
                 'mobilePhone' => '0495151689',
-            ),
-        );
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $infoDistributed = $expectedDocument->createElement('infoDistributed');
@@ -58,14 +58,14 @@ class MessagingTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expectedDocument, $actualDocument);
 
-        $data = array(
-            'infoNextDay' => array(
-                '@attributes' => array(
+        $data = [
+            'infoNextDay' => [
+                '@attributes' => [
                     'language' => 'EN',
-                ),
+                ],
                 'emailAddress' => 'someone@test.com',
-            ),
-        );
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $infoNextDay = $expectedDocument->createElement('infoNextDay');

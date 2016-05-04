@@ -20,7 +20,7 @@ class FormHandler
      *
      * @var array
      */
-    private $parameters = array();
+    private $parameters = [ ];
 
     /**
      * Create bPostFormHandler instance
@@ -40,7 +40,7 @@ class FormHandler
      */
     private function getChecksum()
     {
-        $keysToHash = array(
+        $keysToHash = [
             'accountId',
             'action',
             'costCenter',
@@ -49,7 +49,7 @@ class FormHandler
             'extraSecure',
             'orderReference',
             'orderWeight',
-        );
+        ];
         $base = 'accountId=' . $this->bpost->getAccountId() . '&';
 
         foreach ($keysToHash as $key) {
@@ -68,8 +68,9 @@ class FormHandler
     /**
      * Get the parameters
      *
-     * @param  bool  $form
-     * @param  bool  $includeChecksum
+     * @param bool $form
+     * @param bool $includeChecksum
+     *
      * @return array
      */
     public function getParameters($form = false, $includeChecksum = true)
@@ -97,6 +98,8 @@ class FormHandler
      *
      * @param string $key
      * @param mixed  $value
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setParameter($key, $value)
     {
@@ -104,14 +107,11 @@ class FormHandler
             // limited values
             case 'action':
             case 'lang':
-                $allowedValues['action'] = array('START', 'CONFIRM');
-                $allowedValues['lang'] = array('NL', 'FR', 'EN', 'DE', 'Default');
+                $allowedValues['action'] = [ 'START', 'CONFIRM' ];
+                $allowedValues['lang'] = [ 'NL', 'FR', 'EN', 'DE', 'Default' ];
 
                 if (!in_array($value, $allowedValues[$key])) {
-                    throw new Exception(
-                        'Invalid value (' . $value . ') for ' . $key . ', allowed values are: ' .
-                        implode(', ', $allowedValues[$key]) . '.'
-                    );
+                    throw new Exception('Invalid value (' . $value . ') for ' . $key . ', allowed values are: ' . implode(', ', $allowedValues[$key]) . '.');
                 }
                 $this->parameters[$key] = $value;
                 break;
@@ -119,9 +119,7 @@ class FormHandler
             // maximum 2 chars
             case 'customerCountry':
                 if (mb_strlen($value) > 2) {
-                    throw new Exception(
-                        'Invalid length for ' . $key . ', maximum is 2.'
-                    );
+                    throw new Exception('Invalid length for ' . $key . ', maximum is 2.');
                 }
                 $this->parameters[$key] = (string) $value;
                 break;
@@ -130,9 +128,7 @@ class FormHandler
             case 'customerStreetNumber':
             case 'customerBox':
                 if (mb_strlen($value) > 8) {
-                    throw new Exception(
-                        'Invalid length for ' . $key . ', maximum is 8.'
-                    );
+                    throw new Exception('Invalid length for ' . $key . ', maximum is 8.');
                 }
                 $this->parameters[$key] = (string) $value;
                 break;
@@ -140,9 +136,7 @@ class FormHandler
             // maximum 20 chars
             case 'customerPhoneNumber':
                 if (mb_strlen($value) > 20) {
-                    throw new Exception(
-                        'Invalid length for ' . $key . ', maximum is 20.'
-                    );
+                    throw new Exception('Invalid length for ' . $key . ', maximum is 20.');
                 }
                 $this->parameters[$key] = (string) $value;
                 break;
@@ -150,9 +144,7 @@ class FormHandler
             // maximum 32 chars
             case 'customerPostalCode':
                 if (mb_strlen($value) > 32) {
-                    throw new Exception(
-                        'Invalid length for ' . $key . ', maximum is 32.'
-                    );
+                    throw new Exception('Invalid length for ' . $key . ', maximum is 32.');
                 }
                 $this->parameters[$key] = (string) $value;
                 break;
@@ -164,9 +156,7 @@ class FormHandler
             case 'customerStreet':
             case 'customerCity':
                 if (mb_strlen($value) > 40) {
-                    throw new Exception(
-                        'Invalid length for ' . $key . ', maximum is 40.'
-                    );
+                    throw new Exception('Invalid length for ' . $key . ', maximum is 40.');
                 }
                 $this->parameters[$key] = (string) $value;
                 break;
@@ -176,9 +166,7 @@ class FormHandler
             case 'costCenter':
             case 'customerEmail':
                 if (mb_strlen($value) > 50) {
-                    throw new Exception(
-                        'Invalid length for ' . $key . ', maximum is 50.'
-                    );
+                    throw new Exception('Invalid length for ' . $key . ', maximum is 50.');
                 }
                 $this->parameters[$key] = (string) $value;
                 break;
@@ -192,7 +180,7 @@ class FormHandler
             // array
             case 'orderLine':
                 if (!isset($this->parameters[$key])) {
-                    $this->parameters[$key] = array();
+                    $this->parameters[$key] = [ ];
                 }
                 $this->parameters[$key][] = $value;
                 break;

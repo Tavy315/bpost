@@ -60,16 +60,13 @@ class Label
 
     /**
      * @param string $mimeType
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setMimeType($mimeType)
     {
         if (!in_array($mimeType, self::getPossibleMimeTypeValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleMimeTypeValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleMimeTypeValues())));
         }
 
         $this->mimeType = $mimeType;
@@ -88,11 +85,11 @@ class Label
      */
     public static function getPossibleMimeTypeValues()
     {
-        return array(
+        return [
             'image/png',
             'image/pdf',
             'application/pdf',
-        );
+        ];
     }
 
     /**
@@ -106,12 +103,13 @@ class Label
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return Label
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $label = new Label();
+        $label = new self();
         if (isset($xml->barcode) && $xml->barcode != '') {
             $label->setBarcode((string) $xml->barcode);
         }

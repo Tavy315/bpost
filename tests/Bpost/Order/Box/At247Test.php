@@ -27,25 +27,25 @@ class At247Test extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'at24-7' => array(
-                'product' => 'bpack 24h Pro',
-                'weight' => 2000,
-                'parcelsDepotId' => '014472',
-                'parcelsDepotName' => 'WIJNEGEM',
-                'parcelsDepotAddress' => array(
-                    'streetName' => 'Turnhoutsebaan',
-                    'number' => '468',
-                    'box' => 'A',
-                    'postalCode' => '2110',
-                    'locality' => 'Wijnegem',
+        $data = [
+            'at24-7' => [
+                'product'             => 'bpack 24h Pro',
+                'weight'              => 2000,
+                'parcelsDepotId'      => '014472',
+                'parcelsDepotName'    => 'WIJNEGEM',
+                'parcelsDepotAddress' => [
+                    'streetName'  => 'Turnhoutsebaan',
+                    'number'      => '468',
+                    'box'         => 'A',
+                    'postalCode'  => '2110',
+                    'locality'    => 'Wijnegem',
                     'countryCode' => 'BE',
-                ),
-                'memberId' => '188565346',
-                'receiverName' => 'Tijs Verkoyen',
+                ],
+                'memberId'        => '188565346',
+                'receiverName'    => 'Tijs Verkoyen',
                 'receiverCompany' => 'Sumo Coders',
-            ),
-        );
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $nationalBox = $expectedDocument->createElement('nationalBox');

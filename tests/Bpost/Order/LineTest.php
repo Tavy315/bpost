@@ -26,10 +26,10 @@ class LineTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'text' => 'just a random text',
+        $data = [
+            'text'      => 'just a random text',
             'nbOfItems' => time(),
-        );
+        ];
 
         $expectedDocument = self::createDomDocument();
         $line = $expectedDocument->createElement('orderLine');

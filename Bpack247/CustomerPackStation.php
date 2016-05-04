@@ -72,12 +72,13 @@ class CustomerPackStation
     }
 
     /**
-     * @param  \SimpleXMLElement   $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return CustomerPackStation
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $packStation = new CustomerPackStation();
+        $packStation = new self();
 
         if (isset($xml->OrderNumber) && $xml->OrderNumber != '') {
             $packStation->setOrderNumber((string) $xml->OrderNumber);

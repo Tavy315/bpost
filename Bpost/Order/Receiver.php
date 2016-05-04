@@ -11,12 +11,13 @@ class Receiver extends Customer
     const TAG_NAME = 'receiver';
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return Receiver
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $receiver = new Receiver();
+        $receiver = new self();
         $receiver = parent::createFromXMLHelper($xml, $receiver);
 
         return $receiver;

@@ -217,10 +217,10 @@ class BpostTest extends \PHPUnit_Framework_TestCase
 
         $this->bpost->setTimeOut(60);
         $response = $this->bpost->createLabelInBulkForOrders(
-            array(
+            [
                 $order1->getReference(),
                 $order2->getReference(),
-            )
+            ]
         );
 
         $this->assertInternalType('array', $response);

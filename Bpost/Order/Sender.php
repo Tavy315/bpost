@@ -11,12 +11,13 @@ class Sender extends Customer
     const TAG_NAME = 'sender';
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return Sender
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $sender = new Sender();
+        $sender = new self();
         $sender = parent::createFromXMLHelper($xml, $sender);
 
         return $sender;

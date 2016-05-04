@@ -44,6 +44,9 @@ class Address
 
     /**
      * @param string $box
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setBox($box)
     {
@@ -52,6 +55,8 @@ class Address
             throw new Exception(sprintf('Invalid length, maximum is %1$s.', $length));
         }
         $this->box = $box;
+
+        return $this;
     }
 
     /**
@@ -64,6 +69,9 @@ class Address
 
     /**
      * @param string $countryCode
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setCountryCode($countryCode)
     {
@@ -72,6 +80,8 @@ class Address
             throw new Exception(sprintf('Invalid length, maximum is %1$s.', $length));
         }
         $this->countryCode = strtoupper($countryCode);
+
+        return $this;
     }
 
     /**
@@ -84,6 +94,9 @@ class Address
 
     /**
      * @param string $locality
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setLocality($locality)
     {
@@ -92,6 +105,8 @@ class Address
             throw new Exception(sprintf('Invalid length, maximum is %1$s.', $length));
         }
         $this->locality = $locality;
+
+        return $this;
     }
 
     /**
@@ -104,6 +119,9 @@ class Address
 
     /**
      * @param string $number
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setNumber($number)
     {
@@ -112,6 +130,8 @@ class Address
             throw new Exception(sprintf('Invalid length, maximum is %1$s.', $length));
         }
         $this->number = $number;
+
+        return $this;
     }
 
     /**
@@ -124,6 +144,9 @@ class Address
 
     /**
      * @param string $postalCode
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setPostalCode($postalCode)
     {
@@ -132,6 +155,8 @@ class Address
             throw new Exception(sprintf('Invalid length, maximum is %1$s.', $length));
         }
         $this->postalCode = $postalCode;
+
+        return $this;
     }
 
     /**
@@ -144,6 +169,9 @@ class Address
 
     /**
      * @param string $streetName
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setStreetName($streetName)
     {
@@ -152,6 +180,8 @@ class Address
             throw new Exception(sprintf('Invalid length, maximum is %1$s.', $length));
         }
         $this->streetName = $streetName;
+
+        return $this;
     }
 
     /**
@@ -170,14 +200,8 @@ class Address
      * @param string $locality
      * @param string $countryCode
      */
-    public function __construct(
-        $streetName = null,
-        $number = null,
-        $box = null,
-        $postalCode = null,
-        $locality = null,
-        $countryCode = null
-    ) {
+    public function __construct($streetName = null, $number = null, $box = null, $postalCode = null, $locality = null, $countryCode = null)
+    {
         if ($streetName != null) {
             $this->setStreetName($streetName);
         }
@@ -201,8 +225,9 @@ class Address
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DOMDocument $document
-     * @param  string       $prefix
+     * @param \DOMDocument $document
+     * @param string       $prefix
+     *
      * @return \DOMElement
      */
     public function toXML(\DOMDocument $document, $prefix = 'common')
@@ -216,84 +241,55 @@ class Address
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $address->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getStreetName()
-                )
-            );
+            $address->appendChild($document->createElement($tagName, $this->getStreetName()));
         }
         if ($this->getNumber() !== null) {
             $tagName = 'number';
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $address->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getNumber()
-                )
-            );
+            $address->appendChild($document->createElement($tagName, $this->getNumber()));
         }
         if ($this->getBox() !== null) {
             $tagName = 'box';
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $address->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getBox()
-                )
-            );
+            $address->appendChild($document->createElement($tagName, $this->getBox()));
         }
         if ($this->getPostalCode() !== null) {
             $tagName = 'postalCode';
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $address->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getPostalCode()
-                )
-            );
+            $address->appendChild($document->createElement($tagName, $this->getPostalCode()));
         }
         if ($this->getLocality() !== null) {
             $tagName = 'locality';
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $address->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getLocality()
-                )
-            );
+            $address->appendChild($document->createElement($tagName, $this->getLocality()));
         }
         if ($this->getCountryCode() !== null) {
             $tagName = 'countryCode';
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $address->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getCountryCode()
-                )
-            );
+            $address->appendChild($document->createElement($tagName, $this->getCountryCode()));
         }
 
         return $address;
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return Address
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $address = new Address();
+        $address = new self();
 
         if (isset($xml->streetName) && $xml->streetName != '') {
             $address->setStreetName((string) $xml->streetName);

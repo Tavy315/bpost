@@ -3,8 +3,8 @@ namespace Bpost;
 
 require_once __DIR__ . '/../../../../../autoload.php';
 
-use TijsVerkoyen\Bpost\Bpost\Order\Customer;
 use TijsVerkoyen\Bpost\Bpost\Order\Address;
+use TijsVerkoyen\Bpost\Bpost\Order\Customer;
 
 class CustomerTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,20 +27,20 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'name' => 'Tijs Verkoyen',
+        $data = [
+            'name'    => 'Tijs Verkoyen',
             'company' => 'Sumo Coders',
-            'address' => array(
-                'streetName' => 'Afrikalaan',
-                'number' => '289',
-                'box' => '3',
-                'postalCode' => '9000',
-                'locality' => 'Gent',
+            'address' => [
+                'streetName'  => 'Afrikalaan',
+                'number'      => '289',
+                'box'         => '3',
+                'postalCode'  => '9000',
+                'locality'    => 'Gent',
                 'countryCode' => 'BE',
-            ),
+            ],
             'emailAddress' => 'bpost@verkoyen.eu',
-            'phoneNumber' => '+32 9 395 02 51',
-        );
+            'phoneNumber'  => '+32 9 395 02 51',
+        ];
 
         $expectedDocument = self::createDomDocument();
         $sender = $expectedDocument->createElement('customer');

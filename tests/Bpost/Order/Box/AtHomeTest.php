@@ -5,9 +5,9 @@ require_once __DIR__ . '/../../../../../../autoload.php';
 
 use TijsVerkoyen\Bpost\Bpost\Order\Address;
 use TijsVerkoyen\Bpost\Bpost\Order\Box\AtHome;
+use TijsVerkoyen\Bpost\Bpost\Order\Box\Openinghour\Day as OpeninghourDay;
 use TijsVerkoyen\Bpost\Bpost\Order\Box\Option\Messaging;
 use TijsVerkoyen\Bpost\Bpost\Order\Receiver;
-use TijsVerkoyen\Bpost\Bpost\Order\Box\Openinghour\Day as OpeninghourDay;
 
 class AtHomeTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,40 +30,40 @@ class AtHomeTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'atHome' => array(
+        $data = [
+            'atHome' => [
                 'product' => 'bpack 24h Pro',
-                'options' => array(
-                    array(
-                        'common:infoNextDay' => array(
-                            '@attributes' => array(
+                'options' => [
+                    [
+                        'common:infoNextDay' => [
+                            '@attributes' => [
                                 'language' => 'NL',
-                            ),
+                            ],
                             'common:emailAddress' => 'bpost@verkoyen.eu',
-                        )
-                    )
-                ),
-                'weight' => 2000,
-                'openingHours' => array(
+                        ],
+                    ],
+                ],
+                'weight'       => 2000,
+                'openingHours' => [
                     'Monday' => '10:00-17:00',
-                ),
+                ],
                 'desiredDeliveryPlace' => 1234,
-                'receiver' => array(
-                    'name' => 'Tijs Verkoyen',
+                'receiver'             => [
+                    'name'    => 'Tijs Verkoyen',
                     'company' => 'Sumo Coders',
-                    'address' => array(
-                        'streetName' => 'Afrikalaan',
-                        'number' => '289',
-                        'box' => '3',
-                        'postalCode' => '9000',
-                        'locality' => 'Gent',
+                    'address' => [
+                        'streetName'  => 'Afrikalaan',
+                        'number'      => '289',
+                        'box'         => '3',
+                        'postalCode'  => '9000',
+                        'locality'    => 'Gent',
                         'countryCode' => 'BE',
-                    ),
+                    ],
                     'emailAddress' => 'bpost@verkoyen.eu',
-                    'phoneNumber' => '+32 9 395 02 51',
-                ),
-            ),
-        );
+                    'phoneNumber'  => '+32 9 395 02 51',
+                ],
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $nationalBox = $expectedDocument->createElement('nationalBox');
@@ -156,12 +156,12 @@ class AtHomeTest extends \PHPUnit_Framework_TestCase
         $atHome->addOpeningHour($openingHourDay);
 
         // I know, the line below is kinda bogus, but it will make sure all code is tested
-        $atHome->setOpeningHours(array($openingHourDay));
+        $atHome->setOpeningHours([$openingHourDay]);
 
         $atHome->addOption($messaging);
 
         // I know, the line below is kinda bogus, but it will make sure all code is tested
-        $atHome->setOptions(array($messaging));
+        $atHome->setOptions([$messaging]);
 
         $actualDocument->appendChild(
             $atHome->toXML($actualDocument)

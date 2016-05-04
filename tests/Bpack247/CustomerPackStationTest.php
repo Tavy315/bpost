@@ -27,11 +27,11 @@ class CustomerPackStationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromXML()
     {
-        $data = array(
-            'CustomLabel' => 'CustomLabel',
-            'OrderNumber' => '1',
+        $data = [
+            'CustomLabel'   => 'CustomLabel',
+            'OrderNumber'   => '1',
             'PackstationID' => '14472',
-        );
+        ];
 
         $document = self::createDomDocument();
         $customerPackStationElement = $document->createElement('CustomerPackStation');

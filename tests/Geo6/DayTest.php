@@ -13,12 +13,12 @@ class DayTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromXml()
     {
-        $data = array(
-            'AMOpen' => '9:00',
+        $data = [
+            'AMOpen'  => '9:00',
             'AMClose' => '12:00',
-            'PMOpen' => '13:00',
+            'PMOpen'  => '13:00',
             'PMClose' => '18:00',
-        );
+        ];
 
         // build xml
         $xmlString = '<Monday>';
@@ -64,6 +64,5 @@ class DayTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('TijsVerkoyen\Bpost\Exception', $e);
             $this->assertEquals('Invalid day.', $e->getMessage());
         }
-
     }
 }

@@ -11,5 +11,4 @@ namespace TijsVerkoyen\Bpost\Bpost\Order\Box\Option;
  */
 class Option
 {
-
 }

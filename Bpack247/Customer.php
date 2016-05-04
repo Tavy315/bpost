@@ -2,7 +2,6 @@
 namespace TijsVerkoyen\Bpost\Bpack247;
 
 use TijsVerkoyen\Bpost\Exception;
-use TijsVerkoyen\Bpost\Bpack247\CustomerPackStation;
 
 /**
  * bPost Customer class
@@ -69,7 +68,7 @@ class Customer
     /**
      * @var array
      */
-    private $packStations = array();
+    private $packStations = [ ];
 
     /**
      * @var string
@@ -383,11 +382,11 @@ class Customer
      */
     public static function getPossiblePreferredLanguageValues()
     {
-        return array(
+        return [
             'nl-BE',
             'fr-BE',
             'en-US',
-        );
+        ];
     }
 
     /**
@@ -452,10 +451,10 @@ class Customer
      */
     public static function getPossibleTitleValues()
     {
-        return array(
+        return [
             'Mr.',
             'Ms.',
-        );
+        ];
     }
 
     /**
@@ -525,7 +524,8 @@ class Customer
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DOMDocument $document
+     * @param \DOMDocument $document
+     *
      * @return \DOMElement
      */
     public function toXML(\DOMDocument $document)
@@ -633,8 +633,10 @@ class Customer
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
-     * @return Customer
+     * @param \SimpleXMLElement $xml
+     *
+     * @return \TijsVerkoyen\Bpost\Bpack247\Customer
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
@@ -643,7 +645,7 @@ class Customer
             throw new Exception('No UserId found.');
         }
 
-        $customer = new Customer();
+        $customer = new self();
 
         if (isset($xml->UserID) && $xml->UserID != '') {
             $customer->setUserID((string) $xml->UserID);
@@ -668,39 +670,29 @@ class Customer
             $customer->setDateOfBirth($dateTime);
         }
         if (isset($xml->DeliveryCode) && $xml->DeliveryCode != '') {
-            $customer->setDeliveryCode(
-                (string) $xml->DeliveryCode
-            );
+            $customer->setDeliveryCode((string) $xml->DeliveryCode);
         }
         if (isset($xml->Email) && $xml->Email != '') {
             $customer->setEmail((string) $xml->Email);
         }
         if (isset($xml->MobilePrefix) && $xml->MobilePrefix != '') {
-            $customer->setMobilePrefix(
-                trim((string) $xml->MobilePrefix)
-            );
+            $customer->setMobilePrefix(trim((string) $xml->MobilePrefix));
         }
         if (isset($xml->MobileNumber) && $xml->MobileNumber != '') {
-            $customer->setMobileNumber(
-                (string) $xml->MobileNumber
-            );
+            $customer->setMobileNumber((string) $xml->MobileNumber);
         }
         if (isset($xml->Postalcode) && $xml->Postalcode != '') {
-            $customer->setPostalCode(
-                (string) $xml->Postalcode
-            );
+            $customer->setPostalCode((string) $xml->Postalcode);
         }
         if (isset($xml->PreferredLanguage) && $xml->PreferredLanguage != '') {
-            $customer->setPreferredLanguage(
-                (string) $xml->PreferredLanguage
-            );
+            $customer->setPreferredLanguage((string) $xml->PreferredLanguage);
         }
         if (isset($xml->ReceivePromotions) && $xml->ReceivePromotions != '') {
-            $receivePromotions = in_array((string) $xml->ReceivePromotions, array('true', '1'));
+            $receivePromotions = in_array((string) $xml->ReceivePromotions, [ 'true', '1' ]);
             $customer->setReceivePromotions($receivePromotions);
         }
         if (isset($xml->actived) && $xml->actived != '') {
-            $activated = in_array((string) $xml->actived, array('true', '1'));
+            $activated = in_array((string) $xml->actived, [ 'true', '1' ]);
             $customer->setActivated($activated);
         }
         if (isset($xml->Title) && $xml->Title != '') {

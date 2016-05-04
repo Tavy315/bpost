@@ -37,10 +37,14 @@ class Box
 
     /**
      * @param \TijsVerkoyen\Bpost\Bpost\Order\Box\International $internationalBox
+     *
+     * @return $this
      */
     public function setInternationalBox(Box\International $internationalBox)
     {
         $this->internationalBox = $internationalBox;
+
+        return $this;
     }
 
     /**
@@ -53,10 +57,14 @@ class Box
 
     /**
      * @param \TijsVerkoyen\Bpost\Bpost\Order\Box\National $nationalBox
+     *
+     * @return $this
      */
     public function setNationalBox(Box\National $nationalBox)
     {
         $this->nationalBox = $nationalBox;
+
+        return $this;
     }
 
     /**
@@ -69,10 +77,14 @@ class Box
 
     /**
      * @param string $remark
+     *
+     * @return $this
      */
     public function setRemark($remark)
     {
         $this->remark = $remark;
+
+        return $this;
     }
 
     /**
@@ -85,10 +97,14 @@ class Box
 
     /**
      * @param \TijsVerkoyen\Bpost\Bpost\Order\Sender $sender
+     *
+     * @return $this
      */
     public function setSender(Sender $sender)
     {
         $this->sender = $sender;
+
+        return $this;
     }
 
     /**
@@ -101,20 +117,20 @@ class Box
 
     /**
      * @param string $status
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setStatus($status)
     {
         $status = strtoupper($status);
         if (!in_array($status, self::getPossibleStatusValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleStatusValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleStatusValues())));
         }
 
         $this->status = $status;
+
+        return $this;
     }
 
     /**
@@ -130,7 +146,7 @@ class Box
      */
     public static function getPossibleStatusValues()
     {
-        return array(
+        return [
             'OPEN',
             'PENDING',
             'PRINTED',
@@ -141,14 +157,15 @@ class Box
             'AWAITING_PICKUP',
             'DELIVERED',
             'BACK_TO_SENDER',
-        );
+        ];
     }
 
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
+     * @param \DomDocument $document
+     * @param string       $prefix
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null)
@@ -161,50 +178,37 @@ class Box
         $box = $document->createElement($tagName);
 
         if ($this->getSender() !== null) {
-            $box->appendChild(
-                $this->getSender()->toXML($document, $prefix)
-            );
+            $box->appendChild($this->getSender()->toXML($document, $prefix));
         }
         if ($this->getNationalBox() !== null) {
-            $box->appendChild(
-                $this->getNationalBox()->toXML($document, $prefix)
-            );
+            $box->appendChild($this->getNationalBox()->toXML($document, $prefix));
         }
         if ($this->getInternationalBox() !== null) {
-            $box->appendChild(
-                $this->getInternationalBox()->toXML($document, $prefix)
-            );
+            $box->appendChild($this->getInternationalBox()->toXML($document, $prefix));
         }
         if ($this->getRemark() !== null) {
             $tagName = 'remark';
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $box->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getRemark()
-                )
-            );
+            $box->appendChild($document->createElement($tagName, $this->getRemark()));
         }
 
         return $box;
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
-     * @return Box
+     * @param \SimpleXMLElement $xml
+     *
+     * @return \TijsVerkoyen\Bpost\Bpost\Order\Box
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $box = new Box();
+        $box = new self();
         if (isset($xml->sender)) {
             $box->setSender(
-                Sender::createFromXML(
-                    $xml->sender->children(
-                        'http://schema.post.be/shm/deepintegration/v3/common'
-                    )
-                )
+                Sender::createFromXML($xml->sender->children('http://schema.post.be/shm/deepintegration/v3/common'))
             );
         }
         if (isset($xml->nationalBox)) {
@@ -220,10 +224,7 @@ class Box
                 throw new Exception('Not Implemented');
             }
 
-            $nationalBox = call_user_func(
-                array($className, 'createFromXML'),
-                $nationalBoxData
-            );
+            $nationalBox = call_user_func([ $className, 'createFromXML' ], $nationalBoxData);
 
             $box->setNationalBox($nationalBox);
         }
@@ -238,10 +239,7 @@ class Box
                 throw new Exception('Not Implemented');
             }
 
-            $internationalBox = call_user_func(
-                array($className, 'createFromXML'),
-                $internationalBoxData
-            );
+            $internationalBox = call_user_func([ $className, 'createFromXML' ], $internationalBoxData);
 
             $box->setInternationalBox($internationalBox);
         }

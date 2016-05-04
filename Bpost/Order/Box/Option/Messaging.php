@@ -35,6 +35,8 @@ class Messaging extends Option
 
     /**
      * @param string $emailAddress
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setEmailAddress($emailAddress)
     {
@@ -56,18 +58,15 @@ class Messaging extends Option
 
     /**
      * @param string $language
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setLanguage($language)
     {
         $language = strtoupper($language);
 
         if (!in_array($language, self::getPossibleLanguageValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleLanguageValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleLanguageValues())));
         }
 
         $this->language = $language;
@@ -86,16 +85,18 @@ class Messaging extends Option
      */
     public static function getPossibleLanguageValues()
     {
-        return array(
+        return [
             'EN',
             'NL',
             'FR',
             'DE',
-        );
+        ];
     }
 
     /**
      * @param string $mobilePhone
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setMobilePhone($mobilePhone)
     {
@@ -120,27 +121,23 @@ class Messaging extends Option
      */
     public static function getPossibleTypeValues()
     {
-        return array(
+        return [
             'infoDistributed',
             'infoNextDay',
             'infoReminder',
             'keepMeInformed',
-        );
+        ];
     }
 
     /**
      * @param string $type
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setType($type)
     {
-
         if (!in_array($type, self::getPossibleTypeValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleTypeValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleTypeValues())));
         }
 
         $this->type = $type;
@@ -176,8 +173,9 @@ class Messaging extends Option
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
+     * @param \DomDocument $document
+     * @param string       $prefix
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = 'common')
@@ -219,12 +217,13 @@ class Messaging extends Option
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return Messaging
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $messaging = new Messaging(
+        $messaging = new self(
             $xml->getName(), (string) $xml->attributes()->language
         );
 

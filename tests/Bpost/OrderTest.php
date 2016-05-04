@@ -33,58 +33,58 @@ class OrderTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'accountId' => ACCOUNT_ID,
-            'reference' => 'reference ' . time(),
+        $data = [
+            'accountId'  => ACCOUNT_ID,
+            'reference'  => 'reference ' . time(),
             'costCenter' => 'costcenter ' . time(),
-            'orderLine' => array(
-                array(
-                    'text' => 'Beer ' . time(),
+            'orderLine'  => [
+                [
+                    'text'      => 'Beer ' . time(),
                     'nbOfItems' => rand(1, 10),
-                ),
-                array(
-                    'text' => 'Whisky ' . time(),
+                ],
+                [
+                    'text'      => 'Whisky ' . time(),
                     'nbOfItems' => rand(1, 10),
-                ),
-            ),
-            'box' => array(
-                array(
-                    'sender' => array(
-                        'name' => 'Tijs Verkoyen',
+                ],
+            ],
+            'box' => [
+                [
+                    'sender' => [
+                        'name'    => 'Tijs Verkoyen',
                         'company' => 'Sumo Coders',
-                        'address' => array(
-                            'streetName' => 'Afrikalaan',
-                            'number' => '289',
-                            'postalCode' => '9000',
-                            'locality' => 'Gent',
-                            'countryCode' => 'BE'
-                        ),
+                        'address' => [
+                            'streetName'  => 'Afrikalaan',
+                            'number'      => '289',
+                            'postalCode'  => '9000',
+                            'locality'    => 'Gent',
+                            'countryCode' => 'BE',
+                        ],
                         'emailAddress' => 'bpost@verkoyen.eu',
-                        'phoneNumber' => '+32 9 395 02 51',
-                    ),
-                    'nationalBox' => array(
-                        'at24-7' => array(
-                            'product' => 'bpack 24h Pro',
-                            'weight' => 2000,
-                            'parcelsDepotId' => '014472',
-                            'parcelsDepotName' => 'WIJNEGEM',
-                            'parcelsDepotAddress' => array(
-                                'streetName' => 'Turnhoutsebaan',
-                                'number' => '468',
-                                'box' => 'A',
-                                'postalCode' => '2110',
-                                'locality' => 'Wijnegem',
+                        'phoneNumber'  => '+32 9 395 02 51',
+                    ],
+                    'nationalBox' => [
+                        'at24-7' => [
+                            'product'             => 'bpack 24h Pro',
+                            'weight'              => 2000,
+                            'parcelsDepotId'      => '014472',
+                            'parcelsDepotName'    => 'WIJNEGEM',
+                            'parcelsDepotAddress' => [
+                                'streetName'  => 'Turnhoutsebaan',
+                                'number'      => '468',
+                                'box'         => 'A',
+                                'postalCode'  => '2110',
+                                'locality'    => 'Wijnegem',
                                 'countryCode' => 'BE',
-                            ),
-                            'memberId' => '188565346',
-                            'receiverName' => 'Tijs Verkoyen',
+                            ],
+                            'memberId'        => '188565346',
+                            'receiverName'    => 'Tijs Verkoyen',
                             'receiverCompany' => 'Sumo Coders',
-                        ),
-                    ),
+                        ],
+                    ],
                     'remark' => 'remark ' . time(),
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $order = $expectedDocument->createElement(
@@ -236,12 +236,12 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $order->addLine($line2);
 
         // I know, the line below is kinda bogus, but it will make sure all code is tested
-        $order->setLines(array($line1, $line2));
+        $order->setLines([$line1, $line2]);
 
         $order->addBox($box);
 
         // I know, the line below is kinda bogus, but it will make sure all code is tested
-        $order->setBoxes(array($box));
+        $order->setBoxes([$box]);
 
         $actualDocument->appendChild(
             $order->toXML($actualDocument, ACCOUNT_ID)

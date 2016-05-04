@@ -4,7 +4,6 @@ namespace Bpost;
 require_once __DIR__ . '/../../../../../../../autoload.php';
 
 use TijsVerkoyen\Bpost\Bpost\Order\Box\Customsinfo\CustomsInfo;
-use TijsVerkoyen\Bpost\Exception;
 
 class CustomsInfoTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,13 +26,13 @@ class CustomsInfoTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'parcelValue' => '700',
-            'contentDescription' => 'BOOK',
-            'shipmentType' => 'DOCUMENTS',
+        $data = [
+            'parcelValue'              => '700',
+            'contentDescription'       => 'BOOK',
+            'shipmentType'             => 'DOCUMENTS',
             'parcelReturnInstructions' => 'RTS',
-            'privateAddress' => false,
-        );
+            'privateAddress'           => false,
+        ];
 
         $expectedDocument = self::createDomDocument();
         $customsInfo = $expectedDocument->createElement('customsInfo');
@@ -59,13 +58,13 @@ class CustomsInfoTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expectedDocument, $actualDocument);
 
-        $data = array(
-            'parcelValue' => '700',
-            'contentDescription' => 'BOOK',
-            'shipmentType' => 'DOCUMENTS',
+        $data = [
+            'parcelValue'              => '700',
+            'contentDescription'       => 'BOOK',
+            'shipmentType'             => 'DOCUMENTS',
             'parcelReturnInstructions' => 'RTS',
-            'privateAddress' => true,
-        );
+            'privateAddress'           => true,
+        ];
 
         $expectedDocument = self::createDomDocument();
         $customsInfo = $expectedDocument->createElement('customsInfo');
@@ -95,13 +94,13 @@ class CustomsInfoTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromXML()
     {
-        $data = array(
-            'parcelValue' => '700',
-            'contentDescription' => 'BOOK',
-            'shipmentType' => 'DOCUMENTS',
+        $data = [
+            'parcelValue'              => '700',
+            'contentDescription'       => 'BOOK',
+            'shipmentType'             => 'DOCUMENTS',
             'parcelReturnInstructions' => 'RTS',
-            'privateAddress' => false,
-        );
+            'privateAddress'           => false,
+        ];
 
         $document = self::createDomDocument();
         $customsInfo = $document->createElement('CustomsInfo');
@@ -124,13 +123,13 @@ class CustomsInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['shipmentType'], $customsInfo->getShipmentType());
         $this->assertEquals($data['privateAddress'], $customsInfo->getPrivateAddress());
 
-        $data = array(
-            'parcelValue' => '700',
-            'contentDescription' => 'BOOK',
-            'shipmentType' => 'DOCUMENTS',
+        $data = [
+            'parcelValue'              => '700',
+            'contentDescription'       => 'BOOK',
+            'shipmentType'             => 'DOCUMENTS',
             'parcelReturnInstructions' => 'RTS',
-            'privateAddress' => 'true',
-        );
+            'privateAddress'           => 'true',
+        ];
 
         $document = self::createDomDocument();
         $customsInfo = $document->createElement('CustomsInfo');

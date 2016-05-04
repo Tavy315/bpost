@@ -26,14 +26,14 @@ class PugoAddressTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'streetName' => 'Afrikalaan',
-            'number' => '2890',
-            'box' => '3',
-            'postalCode' => '9000',
-            'locality' => 'Gent',
+        $data = [
+            'streetName'  => 'Afrikalaan',
+            'number'      => '2890',
+            'box'         => '3',
+            'postalCode'  => '9000',
+            'locality'    => 'Gent',
             'countryCode' => 'BE',
-        );
+        ];
 
         $expectedDocument = self::createDomDocument();
         $address = $expectedDocument->createElement('pugoAddress');

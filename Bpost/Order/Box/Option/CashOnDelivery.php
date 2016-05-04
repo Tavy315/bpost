@@ -89,8 +89,9 @@ class CashOnDelivery extends Option
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
+     * @param \DomDocument $document
+     * @param string       $prefix
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null)
@@ -107,36 +108,21 @@ class CashOnDelivery extends Option
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $cod->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getAmount()
-                )
-            );
+            $cod->appendChild($document->createElement($tagName, $this->getAmount()));
         }
         if ($this->getIban() !== null) {
             $tagName = 'iban';
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $cod->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getIban()
-                )
-            );
+            $cod->appendChild($document->createElement($tagName, $this->getIban()));
         }
         if ($this->getBic() !== null) {
             $tagName = 'bic';
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $cod->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getBic()
-                )
-            );
+            $cod->appendChild($document->createElement($tagName, $this->getBic()));
         }
 
         return $cod;

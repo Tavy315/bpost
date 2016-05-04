@@ -91,6 +91,7 @@ class Day
      * Get the index for a day
      *
      * @return int
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function getDayIndex()
     {
@@ -147,12 +148,13 @@ class Day
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return Day
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $day = new Day();
+        $day = new self();
         $day->setDay($xml->getName());
 
         if (isset($xml->AMOpen) && $xml->AMOpen != '') {

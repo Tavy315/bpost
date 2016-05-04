@@ -67,8 +67,9 @@ class Line
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
+     * @param \DomDocument $document
+     * @param string       $prefix
+     *
      * @return \DOMElement
      */
     public function toXML(\DomDocument $document, $prefix = null)
@@ -85,36 +86,27 @@ class Line
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $line->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getText()
-                )
-            );
+            $line->appendChild($document->createElement($tagName, $this->getText()));
         }
         if ($this->getNumberOfItems() !== null) {
             $tagName = 'nbOfItems';
             if ($prefix !== null) {
                 $tagName = $prefix . ':' . $tagName;
             }
-            $line->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $this->getNumberOfItems()
-                )
-            );
+            $line->appendChild($document->createElement($tagName, $this->getNumberOfItems()));
         }
 
         return $line;
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return Line
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $line = new Line();
+        $line = new self();
         if (isset($xml->text) && $xml->text != '') {
             $line->setText((string) $xml->text);
         }

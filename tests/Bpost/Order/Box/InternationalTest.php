@@ -6,8 +6,8 @@ require_once __DIR__ . '/../../../../../../autoload.php';
 use TijsVerkoyen\Bpost\Bpost\Order\Address;
 use TijsVerkoyen\Bpost\Bpost\Order\Box\Customsinfo\CustomsInfo;
 use TijsVerkoyen\Bpost\Bpost\Order\Box\International;
-use TijsVerkoyen\Bpost\Bpost\Order\Receiver;
 use TijsVerkoyen\Bpost\Bpost\Order\Box\Option\Messaging;
+use TijsVerkoyen\Bpost\Bpost\Order\Receiver;
 
 class InternationalTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,43 +30,43 @@ class InternationalTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
-            'international' => array(
+        $data = [
+            'international' => [
                 'product' => 'bpack World Express Pro',
-                'options' => array(
-                    array(
-                        'common:infoNextDay' => array(
-                            '@attributes' => array(
+                'options' => [
+                    [
+                        'common:infoNextDay' => [
+                            '@attributes' => [
                                 'language' => 'NL',
-                            ),
+                            ],
                             'common:emailAddress' => 'bpost@verkoyen.eu',
-                        )
-                    )
-                ),
-                'receiver' => array(
-                    'name' => 'Tijs Verkoyen',
+                        ],
+                    ],
+                ],
+                'receiver' => [
+                    'name'    => 'Tijs Verkoyen',
                     'company' => 'Sumo Coders',
-                    'address' => array(
-                        'streetName' => 'Afrikalaan',
-                        'number' => '289',
-                        'box' => '3',
-                        'postalCode' => '9000',
-                        'locality' => 'Gent',
+                    'address' => [
+                        'streetName'  => 'Afrikalaan',
+                        'number'      => '289',
+                        'box'         => '3',
+                        'postalCode'  => '9000',
+                        'locality'    => 'Gent',
                         'countryCode' => 'BE',
-                    ),
+                    ],
                     'emailAddress' => 'bpost@verkoyen.eu',
-                    'phoneNumber' => '+32 9 395 02 51',
-                ),
+                    'phoneNumber'  => '+32 9 395 02 51',
+                ],
                 'parcelWeight' => 2000,
-                'customsInfo' => array(
-                    'parcelValue' => 700,
-                    'contentDescription' => 'BOOK',
-                    'shipmentType' => 'DOCUMENTS',
+                'customsInfo'  => [
+                    'parcelValue'              => 700,
+                    'contentDescription'       => 'BOOK',
+                    'shipmentType'             => 'DOCUMENTS',
                     'parcelReturnInstructions' => 'RTS',
-                    'privateAddress' => false,
-                )
-            ),
-        );
+                    'privateAddress'           => false,
+                ],
+            ],
+        ];
 
         $expectedDocument = self::createDomDocument();
         $nationalBox = $expectedDocument->createElement('internationalBox');
@@ -168,7 +168,7 @@ class InternationalTest extends \PHPUnit_Framework_TestCase
         $international->addOption($messaging);
 
         // I know, the line below is kinda bogus, but it will make sure all code is tested
-        $international->setOptions(array($messaging));
+        $international->setOptions([$messaging]);
 
         $actualDocument->appendChild(
             $international->toXML($actualDocument)

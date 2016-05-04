@@ -26,16 +26,13 @@ class Day
 
     /**
      * @param string $day
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setDay($day)
     {
         if (!in_array($day, self::getPossibleDayValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleDayValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleDayValues())));
         }
 
         $this->day = $day;
@@ -54,15 +51,15 @@ class Day
      */
     public static function getPossibleDayValues()
     {
-        return array(
+        return [
             'Monday',
             'Tuesday',
             'Wednesday',
             'Thursday',
             'Friday',
-            'Saterday',
-            'Sunday'
-        );
+            'Saturday',
+            'Sunday',
+        ];
     }
 
     /**
@@ -94,8 +91,9 @@ class Day
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
+     * @param \DomDocument $document
+     * @param string       $prefix
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null)

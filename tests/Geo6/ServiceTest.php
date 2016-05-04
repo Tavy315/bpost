@@ -13,11 +13,11 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromXml()
     {
-        $data = array(
+        $data = [
             'category' => '2',
-            'flag' => '10',
-            'Name' => 'Loket met Bancontact/Mistercash',
-        );
+            'flag'     => '10',
+            'Name'     => 'Loket met Bancontact/Mistercash',
+        ];
 
         // build xml
         $xmlString = '<Service';

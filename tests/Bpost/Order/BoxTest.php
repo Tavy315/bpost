@@ -31,42 +31,42 @@ class BoxTest extends \PHPUnit_Framework_TestCase
      */
     public function testNationalToXML()
     {
-        $data = array(
-            'sender' => array(
-                'name' => 'Tijs Verkoyen',
+        $data = [
+            'sender' => [
+                'name'    => 'Tijs Verkoyen',
                 'company' => 'Sumo Coders',
-                'address' => array(
-                    'streetName' => 'Afrikalaan',
-                    'number' => '289',
-                    'box' => '3',
-                    'postalCode' => '9000',
-                    'locality' => 'Gent',
+                'address' => [
+                    'streetName'  => 'Afrikalaan',
+                    'number'      => '289',
+                    'box'         => '3',
+                    'postalCode'  => '9000',
+                    'locality'    => 'Gent',
                     'countryCode' => 'BE',
-                ),
+                ],
                 'emailAddress' => 'bpost@verkoyen.eu',
-                'phoneNumber' => '+32 9 395 02 51',
-            ),
-            'nationalBox' => array(
-                'atHome' => array(
-                    'product' => 'bpack 24h Pro',
-                    'weight' => 2000,
-                    'receiver' => array(
-                        'name' => 'Tijs Verkoyen',
+                'phoneNumber'  => '+32 9 395 02 51',
+            ],
+            'nationalBox' => [
+                'atHome' => [
+                    'product'  => 'bpack 24h Pro',
+                    'weight'   => 2000,
+                    'receiver' => [
+                        'name'    => 'Tijs Verkoyen',
                         'company' => 'Sumo Coders',
-                        'address' => array(
-                            'streetName' => 'Kerkstraat',
-                            'number' => '108',
-                            'postalCode' => '9050',
-                            'locality' => 'Gentbrugge',
+                        'address' => [
+                            'streetName'  => 'Kerkstraat',
+                            'number'      => '108',
+                            'postalCode'  => '9050',
+                            'locality'    => 'Gentbrugge',
                             'countryCode' => 'BE',
-                        ),
+                        ],
                         'emailAddress' => 'bpost@verkoyen.eu',
-                        'phoneNumber' => '+32 9 395 02 51',
-                    ),
-                ),
-            ),
+                        'phoneNumber'  => '+32 9 395 02 51',
+                    ],
+                ],
+            ],
             'remark' => 'remark',
-        );
+        ];
 
         $expectedDocument = self::createDomDocument();
         $box = $expectedDocument->createElement('box');
@@ -172,42 +172,41 @@ class BoxTest extends \PHPUnit_Framework_TestCase
      */
     public function testInternationalToXML()
     {
-
-        $data = array(
-            'sender' => array(
-                'name' => 'Tijs Verkoyen',
+        $data = [
+            'sender' => [
+                'name'    => 'Tijs Verkoyen',
                 'company' => 'Sumo Coders',
-                'address' => array(
-                    'streetName' => 'Afrikalaan',
-                    'number' => '289',
-                    'box' => '3',
-                    'postalCode' => '9000',
-                    'locality' => 'Gent',
+                'address' => [
+                    'streetName'  => 'Afrikalaan',
+                    'number'      => '289',
+                    'box'         => '3',
+                    'postalCode'  => '9000',
+                    'locality'    => 'Gent',
                     'countryCode' => 'BE',
-                ),
+                ],
                 'emailAddress' => 'bpost@verkoyen.eu',
-                'phoneNumber' => '+32 9 395 02 51',
-            ),
-            'internationalBox' => array(
-                'international' => array(
-                    'product' => 'bpack World Express Pro',
-                    'receiver' => array(
-                        'name' => 'Tijs Verkoyen',
+                'phoneNumber'  => '+32 9 395 02 51',
+            ],
+            'internationalBox' => [
+                'international' => [
+                    'product'  => 'bpack World Express Pro',
+                    'receiver' => [
+                        'name'    => 'Tijs Verkoyen',
                         'company' => 'Sumo Coders',
-                        'address' => array(
-                            'streetName' => 'Kerkstraat',
-                            'number' => '108',
-                            'postalCode' => '9050',
-                            'locality' => 'Gentbrugge',
+                        'address' => [
+                            'streetName'  => 'Kerkstraat',
+                            'number'      => '108',
+                            'postalCode'  => '9050',
+                            'locality'    => 'Gentbrugge',
                             'countryCode' => 'BE',
-                        ),
+                        ],
                         'emailAddress' => 'bpost@verkoyen.eu',
-                        'phoneNumber' => '+32 9 395 02 51',
-                    ),
-                ),
-            ),
+                        'phoneNumber'  => '+32 9 395 02 51',
+                    ],
+                ],
+            ],
             'remark' => 'remark',
-        );
+        ];
         $expectedDocument = self::createDomDocument();
         $box = $expectedDocument->createElement('box');
         $expectedDocument->appendChild($box);

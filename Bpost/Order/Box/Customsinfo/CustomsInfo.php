@@ -40,6 +40,8 @@ class CustomsInfo
 
     /**
      * @param string $contentDescription
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setContentDescription($contentDescription)
     {
@@ -61,18 +63,15 @@ class CustomsInfo
 
     /**
      * @param string $parcelReturnInstructions
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setParcelReturnInstructions($parcelReturnInstructions)
     {
         $parcelReturnInstructions = strtoupper($parcelReturnInstructions);
 
         if (!in_array($parcelReturnInstructions, self::getPossibleParcelReturnInstructionValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleParcelReturnInstructionValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleParcelReturnInstructionValues())));
         }
 
         $this->parcelReturnInstructions = $parcelReturnInstructions;
@@ -91,11 +90,11 @@ class CustomsInfo
      */
     public static function getPossibleParcelReturnInstructionValues()
     {
-        return array(
+        return [
             'RTA',
             'RTS',
             'ABANDONED',
-        );
+        ];
     }
 
     /**
@@ -132,18 +131,15 @@ class CustomsInfo
 
     /**
      * @param string $shipmentType
+     *
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setShipmentType($shipmentType)
     {
         $shipmentType = strtoupper($shipmentType);
 
         if (!in_array($shipmentType, self::getPossibleShipmentTypeValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleShipmentTypeValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleShipmentTypeValues())));
         }
 
         $this->shipmentType = $shipmentType;
@@ -162,19 +158,20 @@ class CustomsInfo
      */
     public static function getPossibleShipmentTypeValues()
     {
-        return array(
+        return [
             'SAMPLE',
             'GIFT',
             'DOCUMENTS',
             'OTHER',
-        );
+        ];
     }
 
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
+     * @param \DomDocument $document
+     * @param string       $prefix
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null)
@@ -244,24 +241,20 @@ class CustomsInfo
             } else {
                 $value = 'false';
             }
-            $customsInfo->appendChild(
-                $document->createElement(
-                    $tagName,
-                    $value
-                )
-            );
+            $customsInfo->appendChild($document->createElement($tagName, $value));
         }
 
         return $customsInfo;
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return CustomsInfo
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $customsInfo = new CustomsInfo();
+        $customsInfo = new self();
 
         if (isset($xml->parcelValue) && $xml->parcelValue != '') {
             $customsInfo->setParcelValue(

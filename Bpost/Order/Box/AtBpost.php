@@ -1,9 +1,9 @@
 <?php
 namespace TijsVerkoyen\Bpost\Bpost\Order\Box;
 
+use TijsVerkoyen\Bpost\Bpost\Order\Box\Option\Messaging;
 use TijsVerkoyen\Bpost\Bpost\Order\PugoAddress;
 use TijsVerkoyen\Bpost\Exception;
-use TijsVerkoyen\Bpost\Bpost\Order\Box\Option\Messaging;
 
 /**
  * bPost AtBpost class
@@ -46,20 +46,18 @@ class AtBpost extends National
     private $receiverCompany;
 
     /**
-     * @param string $product Possible values are: bpack@bpost
+     * @param string $product
+     *
+     * @return $this
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public function setProduct($product)
     {
         if (!in_array($product, self::getPossibleProductValues())) {
-            throw new Exception(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', self::getPossibleProductValues())
-                )
-            );
+            throw new Exception(sprintf('Invalid value, possible values are: %1$s.', implode(', ', self::getPossibleProductValues())));
         }
 
-        parent::setProduct($product);
+        return parent::setProduct($product);
     }
 
     /**
@@ -67,17 +65,21 @@ class AtBpost extends National
      */
     public static function getPossibleProductValues()
     {
-        return array(
+        return [
             'bpack@bpost',
-        );
+        ];
     }
 
     /**
      * @param \TijsVerkoyen\Bpost\Bpost\Order\PugoAddress $pugoAddress
+     *
+     * @return $this
      */
     public function setPugoAddress($pugoAddress)
     {
         $this->pugoAddress = $pugoAddress;
+
+        return $this;
     }
 
     /**
@@ -90,10 +92,14 @@ class AtBpost extends National
 
     /**
      * @param string $pugoId
+     *
+     * @return $this
      */
     public function setPugoId($pugoId)
     {
         $this->pugoId = $pugoId;
+
+        return $this;
     }
 
     /**
@@ -106,10 +112,14 @@ class AtBpost extends National
 
     /**
      * @param string $pugoName
+     *
+     * @return $this
      */
     public function setPugoName($pugoName)
     {
         $this->pugoName = $pugoName;
+
+        return $this;
     }
 
     /**
@@ -122,10 +132,14 @@ class AtBpost extends National
 
     /**
      * @param string $receiverCompany
+     *
+     * @return $this
      */
     public function setReceiverCompany($receiverCompany)
     {
         $this->receiverCompany = $receiverCompany;
+
+        return $this;
     }
 
     /**
@@ -138,10 +152,14 @@ class AtBpost extends National
 
     /**
      * @param string $receiverName
+     *
+     * @return $this
      */
     public function setReceiverName($receiverName)
     {
         $this->receiverName = $receiverName;
+
+        return $this;
     }
 
     /**
@@ -155,9 +173,10 @@ class AtBpost extends National
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
-     * @param  string       $type
+     * @param \DomDocument $document
+     * @param string       $prefix
+     * @param string       $type
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null, $type = null)
@@ -216,12 +235,13 @@ class AtBpost extends National
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return AtBpost
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $atBpost = new AtBpost();
+        $atBpost = new self();
 
         if (isset($xml->atBpost->product) && $xml->atBpost->product != '') {
             $atBpost->setProduct(
@@ -234,12 +254,12 @@ class AtBpost extends National
 
                 if (in_array(
                     $optionData->getName(),
-                    array(
+                    [
                         'infoDistributed',
                         'infoNextDay',
                         'infoReminder',
                         'keepMeInformed',
-                    )
+                    ]
                 )
                 ) {
                     $option = Messaging::createFromXML($optionData);
@@ -249,7 +269,7 @@ class AtBpost extends National
                         throw new Exception('Not Implemented');
                     }
                     $option = call_user_func(
-                        array($className, 'createFromXML'),
+                        [ $className, 'createFromXML' ],
                         $optionData
                     );
                 }

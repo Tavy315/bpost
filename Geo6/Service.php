@@ -76,12 +76,13 @@ class Service
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
+     * @param \SimpleXMLElement $xml
+     *
      * @return Service
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $service = new Service();
+        $service = new self();
         $service->setName((string) $xml);
 
         if (isset($xml['category'])) {

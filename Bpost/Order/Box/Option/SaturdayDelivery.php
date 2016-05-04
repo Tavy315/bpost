@@ -17,8 +17,9 @@ class SaturdayDelivery extends Option
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  DomDocument $document
-     * @param  string      $prefix
+     * @param DomDocument $document
+     * @param string      $prefix
+     *
      * @return DomElement
      */
     public function toXML(DOMDocument $document, $prefix = 'common')

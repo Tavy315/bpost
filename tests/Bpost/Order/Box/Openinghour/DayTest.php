@@ -26,9 +26,9 @@ class DayTest extends \PHPUnit_Framework_TestCase
      */
     public function testToXML()
     {
-        $data = array(
+        $data = [
             'Monday' => '10:00-17:00',
-        );
+        ];
 
         $expectedDocument = self::createDomDocument();
         foreach ($data as $key => $value) {
@@ -51,9 +51,9 @@ class DayTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedDocument, $actualDocument);
 
-        $data = array(
+        $data = [
             'Monday' => '10:00-17:00',
-        );
+        ];
 
         $expectedDocument = self::createDomDocument();
         foreach ($data as $key => $value) {

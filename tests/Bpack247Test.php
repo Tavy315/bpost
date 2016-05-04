@@ -58,10 +58,10 @@ class Bpack247Test extends \PHPUnit_Framework_TestCase
      */
     public function testGetMember()
     {
-        $data = array(
-            'id' => '344337728',
+        $data = [
+            'id'     => '344337728',
             'UserId' => '5f1f1b07-a8c4-4d4c-bd5b-cdace6cb7c84',
-        );
+        ];
 
         // @todo    create a member
         $response = $this->bpack247->getMember($data['id']);

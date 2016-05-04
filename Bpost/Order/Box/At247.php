@@ -1,6 +1,7 @@
 <?php
 namespace TijsVerkoyen\Bpost\Bpost\Order\Box;
 
+use TijsVerkoyen\Bpost\Bpost\Order\Box\Option\Messaging;
 use TijsVerkoyen\Bpost\Bpost\Order\ParcelsDepotAddress;
 use TijsVerkoyen\Bpost\Exception;
 
@@ -135,9 +136,9 @@ class At247 extends National
      */
     public static function getPossibleProductValues()
     {
-        return array(
+        return [
             'bpack 24h Pro',
-        );
+        ];
     }
 
     /**
@@ -175,9 +176,10 @@ class At247 extends National
     /**
      * Return the object as an array for usage in the XML
      *
-     * @param  \DomDocument $document
-     * @param  string       $prefix
-     * @param  string       $type
+     * @param \DomDocument $document
+     * @param string       $prefix
+     * @param string       $type
+     *
      * @return \DomElement
      */
     public function toXML(\DOMDocument $document, $prefix = null, $type = null)
@@ -245,67 +247,52 @@ class At247 extends National
     }
 
     /**
-     * @param  \SimpleXMLElement $xml
-     * @return At247
+     * @param \SimpleXMLElement $xml
+     *
+     * @return \TijsVerkoyen\Bpost\Bpost\Order\Box\At247
+     * @throws \TijsVerkoyen\Bpost\Exception
      */
     public static function createFromXML(\SimpleXMLElement $xml)
     {
-        $at247 = new At247();
+        $at247 = new self();
 
         if (isset($xml->{'at24-7'}->product) && $xml->{'at24-7'}->product != '') {
-            $at247->setProduct(
-                (string) $xml->{'at24-7'}->product
-            );
+            $at247->setProduct((string) $xml->{'at24-7'}->product);
         }
         if (isset($xml->{'at24-7'}->options)) {
             foreach ($xml->{'at24-7'}->options as $optionData) {
                 $optionData = $optionData->children('http://schema.post.be/shm/deepintegration/v3/common');
 
-                if (in_array($optionData->getName(), array('infoDistributed'))) {
+                if (in_array($optionData->getName(), [ 'infoDistributed' ])) {
                     $option = Messaging::createFromXML($optionData);
                 } else {
                     $className = '\\TijsVerkoyen\\Bpost\\Bpost\\Order\\Box\\Option\\' . ucfirst($optionData->getName());
                     if (!method_exists($className, 'createFromXML')) {
                         throw new Exception('Not Implemented');
                     }
-                    $option = call_user_func(
-                        array($className, 'createFromXML'),
-                        $optionData
-                    );
+                    $option = call_user_func([ $className, 'createFromXML' ], $optionData);
                 }
 
                 $at247->addOption($option);
             }
         }
         if (isset($xml->{'at24-7'}->weight) && $xml->{'at24-7'}->weight != '') {
-            $at247->setWeight(
-                (int) $xml->{'at24-7'}->weight
-            );
+            $at247->setWeight((int) $xml->{'at24-7'}->weight);
         }
         if (isset($xml->{'at24-7'}->memberId) && $xml->{'at24-7'}->memberId != '') {
-            $at247->setMemberId(
-                (string) $xml->{'at24-7'}->memberId
-            );
+            $at247->setMemberId((string) $xml->{'at24-7'}->memberId);
         }
         if (isset($xml->{'at24-7'}->receiverName) && $xml->{'at24-7'}->receiverName != '') {
-            $at247->setReceiverName(
-                (string) $xml->{'at24-7'}->receiverName
-            );
+            $at247->setReceiverName((string) $xml->{'at24-7'}->receiverName);
         }
         if (isset($xml->{'at24-7'}->receiverCompany) && $xml->{'at24-7'}->receiverCompany != '') {
-            $at247->setReceiverCompany(
-                (string) $xml->{'at24-7'}->receiverCompany
-            );
+            $at247->setReceiverCompany((string) $xml->{'at24-7'}->receiverCompany);
         }
         if (isset($xml->{'at24-7'}->parcelsDepotId) && $xml->{'at24-7'}->parcelsDepotId != '') {
-            $at247->setParcelsDepotId(
-                (string) $xml->{'at24-7'}->parcelsDepotId
-            );
+            $at247->setParcelsDepotId((string) $xml->{'at24-7'}->parcelsDepotId);
         }
         if (isset($xml->{'at24-7'}->parcelsDepotName) && $xml->{'at24-7'}->parcelsDepotName != '') {
-            $at247->setParcelsDepotName(
-                (string) $xml->{'at24-7'}->parcelsDepotName
-            );
+            $at247->setParcelsDepotName((string) $xml->{'at24-7'}->parcelsDepotName);
         }
         if (isset($xml->{'at24-7'}->parcelsDepotAddress)) {
             $parcelsDepotAddressData = $xml->{'at24-7'}->parcelsDepotAddress->children(
