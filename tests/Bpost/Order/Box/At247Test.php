@@ -41,9 +41,9 @@ class At247Test extends \PHPUnit_Framework_TestCase
                     'locality'    => 'Wijnegem',
                     'countryCode' => 'BE',
                 ],
-                'memberId'        => '188565346',
-                'receiverName'    => 'Tijs Verkoyen',
-                'receiverCompany' => 'Sumo Coders',
+                'memberId'            => '188565346',
+                'receiverName'        => 'Tijs Verkoyen',
+                'receiverCompany'     => 'Sumo Coders',
             ],
         ];
 
@@ -57,15 +57,11 @@ class At247Test extends \PHPUnit_Framework_TestCase
                 $address = $expectedDocument->createElement($key);
                 foreach ($value as $key2 => $value2) {
                     $key2 = 'common:' . $key2;
-                    $address->appendChild(
-                        $expectedDocument->createElement($key2, $value2)
-                    );
+                    $address->appendChild($expectedDocument->createElement($key2, $value2));
                 }
                 $at247->appendChild($address);
             } else {
-                $at247->appendChild(
-                    $expectedDocument->createElement($key, $value)
-                );
+                $at247->appendChild($expectedDocument->createElement($key, $value));
             }
         }
 
@@ -91,7 +87,7 @@ class At247Test extends \PHPUnit_Framework_TestCase
             $at247->toXML($actualDocument)
         );
 
-        $this->assertEquals($expectedDocument, $actualDocument);
+        $this->assertSame($expectedDocument, $actualDocument);
     }
 
     /**
@@ -105,13 +101,7 @@ class At247Test extends \PHPUnit_Framework_TestCase
             $at247->setProduct(str_repeat('a', 10));
         } catch (\Exception $e) {
             $this->assertInstanceOf('TijsVerkoyen\Bpost\Exception', $e);
-            $this->assertEquals(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', At247::getPossibleProductValues())
-                ),
-                $e->getMessage()
-            );
+            $this->assertSame(sprintf('Invalid value, possible values are: %1$s.', implode(', ', At247::getPossibleProductValues())), $e->getMessage());
         }
     }
 }

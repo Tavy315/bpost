@@ -29,11 +29,11 @@ class AtBpostTest extends \PHPUnit_Framework_TestCase
     {
         $data = [
             'atBpost' => [
-                'product'     => 'bpack@bpost',
-                'weight'      => 2000,
-                'pugoId'      => '207500',
-                'pugoName'    => 'WIJNEGEM',
-                'pugoAddress' => [
+                'product'         => 'bpack@bpost',
+                'weight'          => 2000,
+                'pugoId'          => '207500',
+                'pugoName'        => 'WIJNEGEM',
+                'pugoAddress'     => [
                     'streetName'  => 'Turnhoutsebaan',
                     'number'      => '468',
                     'postalCode'  => '2110',
@@ -55,15 +55,11 @@ class AtBpostTest extends \PHPUnit_Framework_TestCase
                 $address = $expectedDocument->createElement($key);
                 foreach ($value as $key2 => $value2) {
                     $key2 = 'common:' . $key2;
-                    $address->appendChild(
-                        $expectedDocument->createElement($key2, $value2)
-                    );
+                    $address->appendChild($expectedDocument->createElement($key2, $value2));
                 }
                 $atBpost->appendChild($address);
             } else {
-                $atBpost->appendChild(
-                    $expectedDocument->createElement($key, $value)
-                );
+                $atBpost->appendChild($expectedDocument->createElement($key, $value));
             }
         }
 
@@ -89,7 +85,7 @@ class AtBpostTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument->appendChild($atBpost->toXML($actualDocument));
 
-        $this->assertEquals($expectedDocument, $actualDocument);
+        $this->assertSame($expectedDocument, $actualDocument);
     }
 
     /**
@@ -103,13 +99,7 @@ class AtBpostTest extends \PHPUnit_Framework_TestCase
             $atBpost->setProduct(str_repeat('a', 10));
         } catch (\Exception $e) {
             $this->assertInstanceOf('TijsVerkoyen\Bpost\Exception', $e);
-            $this->assertEquals(
-                sprintf(
-                    'Invalid value, possible values are: %1$s.',
-                    implode(', ', AtBpost::getPossibleProductValues())
-                ),
-                $e->getMessage()
-            );
+            $this->assertSame(sprintf('Invalid value, possible values are: %1$s.', implode(', ', AtBpost::getPossibleProductValues())), $e->getMessage());
         }
     }
 }

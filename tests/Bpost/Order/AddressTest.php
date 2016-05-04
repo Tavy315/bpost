@@ -38,9 +38,7 @@ class AddressTest extends \PHPUnit_Framework_TestCase
         $expectedDocument = self::createDomDocument();
         $address = $expectedDocument->createElement('common:address');
         foreach ($data as $key => $value) {
-            $address->appendChild(
-                $expectedDocument->createElement($key, $value)
-            );
+            $address->appendChild($expectedDocument->createElement($key, $value));
         }
         $expectedDocument->appendChild($address);
 
@@ -53,11 +51,9 @@ class AddressTest extends \PHPUnit_Framework_TestCase
             $data['locality'],
             $data['countryCode']
         );
-        $actualDocument->appendChild(
-            $address->toXML($actualDocument, null)
-        );
+        $actualDocument->appendChild($address->toXML($actualDocument, null));
 
-        $this->assertEquals($expectedDocument, $actualDocument);
+        $this->assertSame($expectedDocument, $actualDocument);
     }
 
     /**
@@ -71,42 +67,42 @@ class AddressTest extends \PHPUnit_Framework_TestCase
             $address->setBox(str_repeat('a', 9));
         } catch (\Exception $e) {
             $this->assertInstanceOf('TijsVerkoyen\Bpost\Exception', $e);
-            $this->assertEquals('Invalid length, maximum is 8.', $e->getMessage());
+            $this->assertSame('Invalid length, maximum is 8.', $e->getMessage());
         }
 
         try {
             $address->setCountryCode(str_repeat('a', 3));
         } catch (\Exception $e) {
             $this->assertInstanceOf('TijsVerkoyen\Bpost\Exception', $e);
-            $this->assertEquals('Invalid length, maximum is 2.', $e->getMessage());
+            $this->assertSame('Invalid length, maximum is 2.', $e->getMessage());
         }
 
         try {
             $address->setLocality(str_repeat('a', 41));
         } catch (\Exception $e) {
             $this->assertInstanceOf('TijsVerkoyen\Bpost\Exception', $e);
-            $this->assertEquals('Invalid length, maximum is 40.', $e->getMessage());
+            $this->assertSame('Invalid length, maximum is 40.', $e->getMessage());
         }
 
         try {
             $address->setNumber(str_repeat('a', 9));
         } catch (\Exception $e) {
             $this->assertInstanceOf('TijsVerkoyen\Bpost\Exception', $e);
-            $this->assertEquals('Invalid length, maximum is 8.', $e->getMessage());
+            $this->assertSame('Invalid length, maximum is 8.', $e->getMessage());
         }
 
         try {
             $address->setPostalCode(str_repeat('a', 41));
         } catch (\Exception $e) {
             $this->assertInstanceOf('TijsVerkoyen\Bpost\Exception', $e);
-            $this->assertEquals('Invalid length, maximum is 40.', $e->getMessage());
+            $this->assertSame('Invalid length, maximum is 40.', $e->getMessage());
         }
 
         try {
             $address->setStreetName(str_repeat('a', 41));
         } catch (\Exception $e) {
             $this->assertInstanceOf('TijsVerkoyen\Bpost\Exception', $e);
-            $this->assertEquals('Invalid length, maximum is 40.', $e->getMessage());
+            $this->assertSame('Invalid length, maximum is 40.', $e->getMessage());
         }
     }
 
@@ -139,11 +135,11 @@ class AddressTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertEquals($data['streetName'], $address->getStreetName());
-        $this->assertEquals($data['number'], $address->getNumber());
-        $this->assertEquals($data['box'], $address->getBox());
-        $this->assertEquals($data['postalCode'], $address->getPostalCode());
-        $this->assertEquals($data['locality'], $address->getLocality());
-        $this->assertEquals($data['countryCode'], $address->getCountryCode());
+        $this->assertSame($data['streetName'], $address->getStreetName());
+        $this->assertSame($data['number'], $address->getNumber());
+        $this->assertSame($data['box'], $address->getBox());
+        $this->assertSame($data['postalCode'], $address->getPostalCode());
+        $this->assertSame($data['locality'], $address->getLocality());
+        $this->assertSame($data['countryCode'], $address->getCountryCode());
     }
 }

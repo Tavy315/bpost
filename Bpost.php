@@ -2,9 +2,11 @@
 namespace TijsVerkoyen\Bpost;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use TijsVerkoyen\Bpost\Bpost\Label;
 use TijsVerkoyen\Bpost\Bpost\Order;
 use TijsVerkoyen\Bpost\Bpost\Order\Box;
+use TijsVerkoyen\Bpost\Bpost\ProductConfiguration;
 
 /**
  * Bpost class
@@ -21,6 +23,12 @@ class Bpost
 
     // current version
     const VERSION = '3.0.2';
+
+    /** Min weight, in grams, for a shipping */
+    const MIN_WEIGHT = 0;
+
+    /** Max weight, in grams, for a shipping */
+    const MAX_WEIGHT = 30000;
 
     /**
      * The account id
@@ -64,6 +72,9 @@ class Bpost
      */
     private $userAgent;
 
+    /** @var Logger */
+    private $logger;
+
     // class methods
     /**
      * Create Bpost instance
@@ -75,6 +86,8 @@ class Bpost
     {
         $this->accountId = (string) $accountId;
         $this->passPhrase = (string) $passPhrase;
+
+        $this->logger = new Logger();
     }
 
     /**
@@ -186,6 +199,8 @@ class Bpost
         // set options
         curl_setopt_array($this->curl, $options);
 
+        $this->logger->debug('curl request', $options);
+
         // execute
         $response = curl_exec($this->curl);
         $headers = curl_getinfo($this->curl);
@@ -194,13 +209,16 @@ class Bpost
         $errorNumber = curl_errno($this->curl);
         $errorMessage = curl_error($this->curl);
 
+        $this->logger->debug('curl response', [
+            'status'   => $errorNumber . ' (' . $errorMessage . ')',
+            'headers'  => $headers,
+            'response' => $response,
+        ]);
+
         // error?
         if ($errorNumber != '') {
             throw new Exception($errorMessage, $errorNumber);
         }
-
-//        \Zend_Debug::dump($body);
-//        \Zend_Debug::dump($response);
 
         // valid HTTP-code
         if (!in_array($headers['http_code'], [ 0, 200, 201 ])) {
@@ -369,6 +387,23 @@ class Bpost
         $xml = $this->doCall($url, null, $headers);
 
         return Order::createFromXML($xml);
+    }
+
+    /**
+     * Get the products configuration
+     *
+     * @return ProductConfiguration
+     */
+    public function fetchProductConfig()
+    {
+        $url = '/productconfig';
+        $headers = [
+            'Accept: application/vnd.bpost.shm-productConfiguration-v3.1+XML',
+        ];
+        /** @var \SimpleXMLElement $xml */
+        $xml = $this->doCall($url, null, $headers);
+
+        return ProductConfiguration::createFromXML($xml);
     }
 
     /**
@@ -563,5 +598,25 @@ class Bpost
         }
 
         return $labels;
+    }
+
+    /**
+     * Set a logger to permit to the plugin to log events
+     *
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger->setLogger($logger);
+    }
+
+    /**
+     * @param int $weight in grams
+     *
+     * @return bool
+     */
+    public function isValidWeight($weight)
+    {
+        return self::MIN_WEIGHT <= $weight && $weight <= self::MAX_WEIGHT;
     }
 }
